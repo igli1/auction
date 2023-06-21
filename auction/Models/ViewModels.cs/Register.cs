@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace auction.Models.ViewModels.cs;
-
-public class CreateUser
+[Bind(Prefix = "Register")]
+public class Register
 {
     [Required]
     [StringLength(20, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 20 characters.")]

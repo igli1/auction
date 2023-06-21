@@ -1,0 +1,62 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model auction.Models.ViewModels.cs.RegisterLoginViewModel
+
+@{
+    ViewData["Title"] = "Login Register";
+}
+<div class="container">
+    <div class="col-md-6">
+        <h2>Login</h2>
+        <form asp-action="Login" method="post">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label asp-for="@Model.Login.UserName"></label>
+                <input asp-for="@Model.Login.UserName" name="Login.UserName" class="form-control"/>
+                <span asp-validation-for="@Model.Login.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Login.Password"></label>
+                <input asp-for="@Model.Login.Password" name="Login.Password" type="password" class="form-control"/>
+                <span asp-validation-for="@Model.Login.Password" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <h2>Register</h2>
+        <form asp-action="Register" method="post">
+            <div class="form-group">
+                <label asp-for="Register.UserName"></label>
+                <input asp-for="Register.UserName" class="form-control"/>
+                <span asp-validation-for="Register.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Register.FirstName"></label>
+                <input asp-for="Register.FirstName"  class="form-control"/>
+                <span asp-validation-for="@Model.Register.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Register.LastName"></label>
+                <input asp-for="Register.LastName"  class="form-control"/>
+                <span asp-validation-for="Register.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Register.Password"></label>
+                <input asp-for="Register.Password"  type="password" class="form-control"/>
+                <span asp-validation-for="Register.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Register.ConfirmPassword"></label>
+                <input asp-for="Register.ConfirmPassword"  type="password" class="form-control"/>
+                <span asp-validation-for="Register.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

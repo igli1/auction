@@ -12,27 +12,47 @@ public class UserController : Controller
     {
         _userManager = userManager;
     }
-    
-    public IActionResult Create()
+    public IActionResult RegisterAndLogin()
     {
         return View();
     }
     [HttpPost]
-    public async Task<IActionResult> Create(CreateUser model)
+    public IActionResult Login(Login model)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);
+            var rlVm = new RegisterLoginViewModel
+            {
+                Login = model
+            };
+            return View("RegisterAndLogin", rlVm);
         }
-        
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Register(Register model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var rlVm = new RegisterLoginViewModel
+            {
+                Register = model
+            };
+            return View("RegisterAndLogin", rlVm);
+        }
+
         var applicationUser = new ApplicationUser() { UserName = model.UserName, FirstName = model.FirstName.ToLower(), LastName = model.LastName.ToLower()};
         
         var result = await _userManager.CreateAsync(applicationUser, model.Password);
-        
-        
+
         if (!result.Succeeded)
         {
-            return BadRequest(result.Errors);
+            var rlVm = new RegisterLoginViewModel
+            {
+                Register = model
+            };
+            return View("RegisterAndLogin", rlVm);
         }
         
         return RedirectToAction("Index", "Home");
