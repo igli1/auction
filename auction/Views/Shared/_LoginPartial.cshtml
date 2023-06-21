@@ -7,20 +7,15 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark"  title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        <label class="nav-link text-dark">Hello @UserManager.GetUserName(User)!</label>
     </li>
     <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-        </form>
+        <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-controller="User" asp-action="RegisterAndLogin">RegisterAndLogin</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login">Login</a>
+        <a class="nav-link text-dark" id="register" asp-controller="User" asp-action="RegisterAndLogin">Login Register</a>
     </li>
 }

@@ -8,23 +8,42 @@ namespace auction.Controllers;
 public class UserController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    public UserController(UserManager<ApplicationUser> userManager)
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    public UserController(UserManager<ApplicationUser> userManager, 
+        SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
     public IActionResult RegisterAndLogin()
     {
         return View();
     }
     [HttpPost]
-    public IActionResult Login(Login model)
+    public async Task<IActionResult> Login(Login model)
     {
+        var rlVm = new RegisterLoginViewModel
+        {
+            Login = model
+        };
         if (!ModelState.IsValid)
         {
-            var rlVm = new RegisterLoginViewModel
-            {
-                Login = model
-            };
+            return View("RegisterAndLogin", rlVm);
+        }
+        var user = await _userManager.FindByNameAsync(model.UserName);
+        
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "User does not exist.");
+
+            return View("RegisterAndLogin", rlVm);
+        }
+        var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+        if (!result.Succeeded)
+        {
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+
             return View("RegisterAndLogin", rlVm);
         }
         return RedirectToAction("Index", "Home");
@@ -56,5 +75,10 @@ public class UserController : Controller
         }
         
         return RedirectToAction("Index", "Home");
+    }
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("RegisterAndLogin");
     }
 }
