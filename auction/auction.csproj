@@ -19,4 +19,8 @@
       <_ContentIncludedByDefault Remove="Pages\User\Create.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>
