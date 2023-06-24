@@ -1,12 +1,29 @@
-﻿namespace auction.Models.Database.Entity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace auction.Models.Database.Entity;
 
 public class Bid
 {
+    [Key]
     public int Id { get; set; }
-    public string UserId { get; set; }
-    public ApplicationUser User { get; set; }
+    [Required]
+    [ForeignKey("Bidder")]
+    public string BidderId { get; set; }
+    [Required]
+    public ApplicationUser Bidder { get; set; }
+    [Required]
+    [ForeignKey("Product")]
     public int ProductId { get; set; }
+    [Required]
     public Product Product { get; set; }
-    public int TransactionId { get; set; }
-    public Transaction Transaction { get; set; }
+    [Required]
+    [DataType(DataType.Currency)]
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal Amount { get; set; }
+    [Required]
+    [DataType(DataType.DateTime)]
+    public DateTime BidTime { get; set; }
+    [Required]
+    public bool IsWinning { get; set; } = false;
 }

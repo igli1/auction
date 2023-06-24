@@ -10,7 +10,6 @@ public class AuctionDbContext : IdentityDbContext<ApplicationUser>
     {
     }
     public DbSet<Wallet> Wallet { get; set; }
-    public DbSet<SoldItem> SoldItem { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<Transaction> Transaction { get; set; }
     public DbSet<Bid> Bid { get; set; }
@@ -18,45 +17,38 @@ public class AuctionDbContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Wallet>().ToTable("Wallets");
-        modelBuilder.Entity<SoldItem>().ToTable("SoldItems");
         modelBuilder.Entity<Product>().ToTable("Products");
         modelBuilder.Entity<Transaction>().ToTable("Transactions");
         modelBuilder.Entity<Bid>().ToTable("Bids");
         
         modelBuilder.Entity<Wallet>()
-            .HasOne(w => w.ApplicationUser)
+            .HasOne(w => w.User)
             .WithOne(au => au.Wallet)
             .HasForeignKey<Wallet>(w => w.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<SoldItem>()
-            .HasOne(si => si.Buyer)
-            .WithMany(au => au.SoldItems)
-            .HasForeignKey(si => si.UserId)
-            .OnDelete(DeleteBehavior.Restrict);;
-        
-        modelBuilder.Entity<SoldItem>()
-            .HasOne(si => si.Transaction)
-            .WithOne(t => t.SoldItem)
-            .HasForeignKey<SoldItem>(si => si.TransactionId)
+        modelBuilder.Entity<Bid>()
+            .HasOne(b => b.Product)
+            .WithMany(p => p.ProductBids)
+            .HasForeignKey(b => b.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        modelBuilder.Entity<SoldItem>()
-            .HasOne(si => si.Product)
-            .WithOne(p => p.SoldItem)
-            .HasForeignKey<SoldItem>(si => si.ProductId)
+        modelBuilder.Entity<Product>()
+            .HasOne(b => b.Seller)
+            .WithMany(u => u.UserProducts)
+            .HasForeignKey(p => p.SellerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         modelBuilder.Entity<Transaction>()
-            .HasOne(t => t.Wallet)
-            .WithMany(w => w.Transactions)
-            .HasForeignKey(w => w.WalletId)
+            .HasOne(t => t.FromUser)
+            .WithMany(u => u.SentTransactions)
+            .HasForeignKey(t => t.FromUserId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        modelBuilder.Entity<Bid>()
-            .HasOne(b => b.Product)
-            .WithMany(p => p.Bids)
-            .HasForeignKey(b => b.ProductId)
+        modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.ToUser)
+            .WithMany(u => u.ReceivedTransactions)
+            .HasForeignKey(t => t.ToUserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);

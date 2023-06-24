@@ -26,16 +26,16 @@ public class HomeController : Controller
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
         var products = await _context.Product
-            .Include(n => n.User)
-            .Include(p => p.Bids)
+            .Include(n => n.Seller)
+            .Include(p => p.ProductBids)
             .Where(p => !p.isDeleted && p.EndDate >= DateTime.UtcNow)
             .Select(p => new AuctionViewModel
             {
                 ProductId = p.Id,
                 ProductName = p.Name,
-                SellerName = p.User.UserName,
+                SellerName = p.Seller.UserName,
                 TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
-                IsCurrentUserProductOwner = p.UserId == userId
+                IsCurrentUserProductOwner = p.SellerId == userId
             })
             .ToListAsync();
         
@@ -79,7 +79,8 @@ public class HomeController : Controller
         {
             Name = model.ProductName,
             StartingPrice = model.StartingBid,
-            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+            SellerId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+            Description = model.Description,
             EndDate = model.EndDate
         };
         await _context.Product.AddAsync(product);
@@ -89,27 +90,62 @@ public class HomeController : Controller
     [Authorize]
     public async Task<IActionResult> ProductDetails(int Id)
     {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
         var product = await _context.Product
-            .Include(p => p.User)
-            .Include(p => p.Bids)
-            .ThenInclude(b => b.Transaction)
-            .ThenInclude(t => t.Wallet)
-            .ThenInclude(w => w.ApplicationUser)
+            .Include(p => p.Seller)
+            .Include(p => p.ProductBids)
             .Where(p=> p.Id == Id && !p.isDeleted)
             .Select(p => new ProductDetailsViewModel
         {
-         ProductName   = p.Name,
-         ProductOwner = p.User.FirstName + " " + p.User.LastName,
-         DaysRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
-         Description = p.Description,
-         HighestBid = p.Bids != null && p.Bids.Any(b => b.Transaction != null) ? 
-             p.Bids.Where(b => b.Transaction != null).Max(b => b.Transaction.Amount) : 0,
-         BidderName = p.Bids != null && p.Bids.Any(b => b.Transaction != null && b.Transaction.Wallet != null && b.Transaction.Wallet.ApplicationUser != null)
-             ? p.Bids.Where(b => b.Transaction != null)
-                   .OrderByDescending(b => b.Transaction.Amount)
-                   .FirstOrDefault().Transaction.Wallet.ApplicationUser.UserName : ""
+            UserId = userId,
+            UserBalance = wallet.Balance,
+            ProductId = p.Id,
+            ProductName   = p.Name,
+            IsCurrentUserProductOwner = p.Seller.Id == userId,
+            ProductOwner = p.Seller.FirstName + " " + p.Seller.LastName,
+            DaysRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
+            Description = p.Description,
+            StartingPrice = p.StartingPrice,
         }).FirstOrDefaultAsync();
         
         return View(product);
+    }
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> NewBid(BidViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("ProductDetails", new { id = model.ProductId });
+        }
+        
+        var wallet = await _context.Wallet.
+            Include(w => w.User)
+            .ThenInclude(u => u.UserBids)
+            .FirstOrDefaultAsync(w => w.UserId == model.Userid);
+        
+        var productValid = await _context.Product.AnyAsync(p => p.Id == model.ProductId && !p.isDeleted);
+        
+        var activeBidsTotal = wallet.User.UserBids?.Where(b => b.IsWinning == false).Sum(b => b.Amount);
+        var availableamount = wallet.Balance - activeBidsTotal;
+        
+        if (wallet == null || !productValid || (availableamount < model.BidAmount))
+        {
+            return BadRequest();
+        }
+        
+        var bid = new Bid
+        {
+            BidderId = model.Userid,
+            ProductId = model.ProductId,
+        };
+
+        await _context.Bid.AddAsync(bid);
+        _context.Wallet.Update(wallet);
+
+        await _context.SaveChangesAsync();
+        
+        return RedirectToAction("Index");
     }
 }

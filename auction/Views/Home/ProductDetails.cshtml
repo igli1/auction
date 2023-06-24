@@ -1,6 +1,8 @@
 ﻿@model auction.Models.ViewModels.ProductDetailsViewModel
 @{
     ViewData["Title"] = "Product Details";
+    decimal minBid = Model?.HighestBid != 0 ? Model.HighestBid + 1 : Model.StartingPrice + 1;
+    bool canBid = minBid <= Model.UserBalance;
 }
 
 <div class="container">
@@ -27,16 +29,48 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <p>Current Highest Bid:</p>
-        </div>
-        <div class="col-md-6 text-right">
-            <p>Bidder: @Model?.BidderName</p>
+        <div class="col-md-6 offset-md-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">Current Highest Bid:</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-0">Bidder: @Model?.BidderName</p>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <p>Bid Amount: @Model?.HighestBid</p>
+        <div class="col-md-12 offset-md-3">
+            <p>$ @Model?.HighestBid</p>
         </div>
     </div>
+    @if (Model?.IsCurrentUserProductOwner != null && !@Model.IsCurrentUserProductOwner)
+    {
+        <div class="col-md-4 offset-md-4">
+            <form asp-action="NewBid" method="post" class="mx-auto">
+                <input asp-for="Bid.ProductId" class="form-control" hidden value="@Model.ProductId"/>
+                <input asp-for="Bid.Userid" class="form-control" hidden value="@Model.UserId"/>
+                <div class="form-group">
+                    @if(canBid)
+                    {
+                        <input asp-for="Bid.BidAmount" placeholder="Your bid goes here." class="form-control" type="number" step="0.01" min="@minBid"/>
+                    }
+                    else{
+                        <input asp-for="Bid.BidAmount" placeholder="Your bid goes here." class="form-control" type="number" step="0.01" min="@minBid" disabled/>
+                    }
+                    <span asp-validation-for="Bid.BidAmount" class="text-danger"></span>
+                </div>
+                <br/>
+                <div class="form-group">
+                    @if(canBid){
+                        <button type="submit" class="btn btn-primary">Bid</button>
+                    }
+                    else{
+                        <button type="submit" class="btn btn-primary" disabled>Bid</button>
+                    }
+                </div>
+            </form>
+        </div>
+    }
 </div>
