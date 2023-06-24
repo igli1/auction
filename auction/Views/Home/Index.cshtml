@@ -24,9 +24,17 @@
                         @foreach (var auction in Model.Auctions)
                         {
                             <tr>
-                                <a asp-action="ProductDetails" asp-route-Id="@auction.ProductId">@auction.ProductName</a>
-                                <td>@auction.SellerName</td>
-                                <td>@auction.TopBid</td>
+                                <td>
+                                    <a asp-action="ProductDetails" asp-route-Id="@auction.ProductId">@auction.ProductName</a>
+                                </td>
+                                <td>
+                                    @auction.SellerName
+                                    @if (auction.IsCurrentUserProductOwner)
+                                    {
+                                        <span>(You)</span>
+                                    }
+                                </td>
+                                <td>@auction?.TopBid</td>
                                 <td>@auction.TimeRemaining</td>
                                 <td>
                                     @if (auction.IsCurrentUserProductOwner)

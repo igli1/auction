@@ -61,10 +61,19 @@ public class UserController : Controller
             return View("RegisterAndLogin", rlVm);
         }
 
-        var applicationUser = new ApplicationUser() { UserName = model.UserName, FirstName = model.FirstName.ToLower(), LastName = model.LastName.ToLower()};
+        var wallet = new Wallet
+        {
+            Balance = 1000
+        };
+        
+        var applicationUser = new ApplicationUser() { UserName = model.UserName, 
+            FirstName = model.FirstName.ToLower(), 
+            LastName = model.LastName.ToLower(),
+            Wallet = wallet
+        };
         
         var result = await _userManager.CreateAsync(applicationUser, model.Password);
-
+        
         if (!result.Succeeded)
         {
             var rlVm = new RegisterLoginViewModel

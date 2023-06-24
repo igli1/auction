@@ -6,6 +6,8 @@ public class Product
     public string Name { get; set; }
     public decimal StartingPrice { get; set; }
     public bool isDeleted { get; set; } = false;
+    public DateTime EndDate { get; set; }
+    public string Description { get; set; }
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
     public List<Bid> Bids { get; set; }
