@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace auction.Models.ViewModels.cs;
+﻿namespace auction.Models.ViewModels;
 
 public class RegisterLoginViewModel
 {

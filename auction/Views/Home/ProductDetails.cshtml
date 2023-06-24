@@ -1,0 +1,40 @@
+﻿@model auction.Models.ViewModels.ProductDetailsViewModel
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center">@Model.ProductName</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <p>Created by: @Model.ProductOwner</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>Time Remaining: @Model.DaysRemaining days</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>Description: @Model?.Description</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>Current Highest Bid:</p>
+        </div>
+        <div class="col-md-6 text-right">
+            <p>Bidder: @Model?.BidderName</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>Bid Amount: @Model?.HighestBid</p>
+        </div>
+    </div>
+</div>

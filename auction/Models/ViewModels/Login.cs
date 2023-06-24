@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace auction.Models.ViewModels.cs;
+namespace auction.Models.ViewModels;
 [Bind(Prefix = "Login")]
 public class Login
 {

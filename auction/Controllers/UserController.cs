@@ -1,5 +1,5 @@
 ﻿using auction.Models.Database.Entity;
-using auction.Models.ViewModels.cs;
+using auction.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
