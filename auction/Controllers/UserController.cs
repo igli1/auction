@@ -1,5 +1,6 @@
 ﻿using auction.Models.Database.Entity;
 using auction.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +18,20 @@ public class UserController : Controller
     }
     public IActionResult RegisterAndLogin()
     {
+        if (User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
     [HttpPost]
     public async Task<IActionResult> Login(Login model)
     {
+        if (User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        
         var rlVm = new RegisterLoginViewModel
         {
             Login = model
@@ -52,6 +62,11 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(Register model)
     {
+        if (User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        
         if (!ModelState.IsValid)
         {
             var rlVm = new RegisterLoginViewModel
@@ -80,11 +95,13 @@ public class UserController : Controller
             {
                 Register = model
             };
+            ModelState.AddModelError(string.Empty, result.Errors.ToString());
             return View("RegisterAndLogin", rlVm);
         }
         
         return RedirectToAction("Index", "Home");
     }
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
