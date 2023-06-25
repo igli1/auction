@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace auction.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -20,7 +21,6 @@ public class HomeController : Controller
         _logger = logger;
         _context = context;
     }
-    [Authorize]
     public async Task<IActionResult> Index()
     {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -49,8 +49,7 @@ public class HomeController : Controller
         
         return View(auction);
     }
-
-    [Authorize]
+    
     public IActionResult Privacy()
     {
         return View();
@@ -61,12 +60,10 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-    [Authorize]
     public IActionResult NewAuction()
     {
         return View();
     }
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> NewAuction(CreateAuctionViewModel model)
     {
@@ -87,7 +84,6 @@ public class HomeController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Index");
     }
-    [Authorize]
     public async Task<IActionResult> ProductDetails(int Id)
     {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -111,7 +107,6 @@ public class HomeController : Controller
         
         return View(product);
     }
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> NewBid(BidViewModel model)
     {
