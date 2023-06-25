@@ -99,19 +99,27 @@ public class HomeController : Controller
         var product = await _context.Product
             .Include(p => p.Seller)
             .Include(p => p.ProductBids)
+            .ThenInclude(b => b.Bidder)
             .Where(p=> p.Id == Id && !p.isDeleted)
-            .Select(p => new ProductDetailsViewModel
-        {
-            UserId = userId,
-            UserBalance = wallet.Balance,
-            ProductId = p.Id,
-            ProductName   = p.Name,
-            IsCurrentUserProductOwner = p.Seller.Id == userId,
-            ProductOwner = p.Seller.UserName,
-            DaysRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
-            Description = p.Description,
-            StartingPrice = p.StartingPrice,
-        }).FirstOrDefaultAsync();
+            .Select(p => new 
+            {
+                Product = p,
+                HighestBid = p.ProductBids.OrderByDescending(b => b.Amount).FirstOrDefault()
+            })
+            .Select(x => new ProductDetailsViewModel
+            {
+                UserId = userId,
+                UserBalance = wallet.Balance,
+                ProductId = x.Product.Id,
+                ProductName = x.Product.Name,
+                IsCurrentUserProductOwner = x.Product.Seller.Id == userId,
+                ProductOwner = x.Product.Seller.UserName,
+                DaysRemaining = (x.Product.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
+                Description = x.Product.Description,
+                StartingPrice = x.Product.StartingPrice,
+                HighestBid = x.HighestBid != null ? x.HighestBid.Amount : 0,
+                BidderName = x.HighestBid != null ? x.HighestBid.Bidder.UserName : ""
+            }).FirstOrDefaultAsync();
         
         return View(product);
     }
