@@ -144,4 +144,21 @@ public class HomeController : Controller
         
         return RedirectToAction("Index");
     }
+    
+    public async Task<IActionResult> DeleteProduct(int Id)
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        var product = await _context.Product.FirstOrDefaultAsync(p => p.Id == Id && p.SellerId == userId);
+        
+        if (product == null)
+        {
+            return NotFound();
+        }
+        
+        _context.Product.Remove(product);
+        await _context.SaveChangesAsync();
+        
+        return RedirectToAction("Index");
+    }
 }
