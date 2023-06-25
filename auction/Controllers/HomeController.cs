@@ -73,6 +73,17 @@ public class HomeController : Controller
             return View(model);
         }
 
+        if (model.EndDate < DateTime.Today.AddDays(1))
+        {
+            ModelState.AddModelError("EndDate", "Minimum End Date should be a day after today.");
+            return View(model);
+        }
+        
+        if (ModelState.IsValid)
+        {
+            model.EndDate = new DateTime(model.EndDate.Year, model.EndDate.Month, model.EndDate.Day, 12, 0, 0);
+        }
+
         var product = new Product
         {
             Name = model.ProductName,

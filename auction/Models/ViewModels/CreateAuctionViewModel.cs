@@ -15,5 +15,6 @@ public class CreateAuctionViewModel
 
     [Required(ErrorMessage = "End Date is required.")]
     [DataType(DataType.DateTime)]
-    public DateTime EndDate { get; set; }
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
+    public DateTime EndDate { get; set; } = DateTime.Today.AddDays(1).Date.AddHours(12);
 }
