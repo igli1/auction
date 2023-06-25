@@ -37,6 +37,7 @@ public class HomeController : Controller
                 TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
                 IsCurrentUserProductOwner = p.SellerId == userId
             })
+            .OrderBy(p => p.TimeRemaining)
             .ToListAsync();
         
         var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
