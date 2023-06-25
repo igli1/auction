@@ -35,6 +35,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/RegisterAndLogin";
+    options.AccessDeniedPath = "/Home/Index";
 });
 
 builder.Services.AddControllersWithViews();
@@ -58,6 +59,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=User}/{action=RegisterAndLogin}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
