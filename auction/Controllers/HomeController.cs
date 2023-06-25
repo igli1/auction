@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
+using auction.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using auction.Models;
 using auction.Models.Database;
 using auction.Models.Database.Entity;
 using auction.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace auction.Controllers;
@@ -15,30 +17,21 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly AuctionDbContext _context;
+    private readonly IHubContext<AuctionsHub> _auctionHubContext;
 
-    public HomeController(ILogger<HomeController> logger, AuctionDbContext context)
+    public HomeController(ILogger<HomeController> logger, 
+        AuctionDbContext context,
+        IHubContext<AuctionsHub> auctionHubContext)
     {
         _logger = logger;
         _context = context;
+        _auctionHubContext = auctionHubContext;
     }
     public async Task<IActionResult> Index()
     {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-        var products = await _context.Product
-            .Include(n => n.Seller)
-            .Include(p => p.ProductBids)
-            .Where(p => !p.isDeleted && p.EndDate >= DateTime.UtcNow)
-            .OrderBy(p => p.EndDate)
-            .Select(p => new AuctionViewModel
-            {
-                ProductId = p.Id,
-                ProductName = p.Name,
-                SellerName = p.Seller.UserName,
-                TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
-                IsCurrentUserProductOwner = p.SellerId == userId
-            })
-            .ToListAsync();
+
+        var products = await Auctions(userId);
         
         var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
         
@@ -94,6 +87,9 @@ public class HomeController : Controller
         };
         await _context.Product.AddAsync(product);
         await _context.SaveChangesAsync();
+        
+        await UpdateAuctions();
+        
         return RedirectToAction("Index");
     }
     public async Task<IActionResult> ProductDetails(int Id)
@@ -153,6 +149,8 @@ public class HomeController : Controller
 
         await _context.SaveChangesAsync();
         
+        await UpdateAuctions();
+        
         return RedirectToAction("Index");
     }
     
@@ -170,6 +168,39 @@ public class HomeController : Controller
         _context.Product.Remove(product);
         await _context.SaveChangesAsync();
         
+        await UpdateAuctions();
+        
         return RedirectToAction("Index");
+    }
+
+    public async Task<IActionResult> UpdateAuctions()
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var products = await Auctions(userId);
+    
+        await _auctionHubContext.Clients.All.SendAsync("ReceiveUpdatedAuctions", products);
+
+        return Ok();
+    }
+
+    public async Task<List<AuctionViewModel>> Auctions(string userId)
+    {
+        var products = await _context.Product
+            .Include(n => n.Seller)
+            .Include(p => p.ProductBids)
+            .Where(p => !p.isDeleted && p.EndDate >= DateTime.UtcNow)
+            .OrderBy(p => p.EndDate)
+            .Select(p => new AuctionViewModel
+            {
+                ProductId = p.Id,
+                ProductName = p.Name,
+                SellerName = p.Seller.UserName,
+                TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
+                IsCurrentUserProductOwner = p.SellerId == userId
+            })
+            .ToListAsync();
+        
+        return products;
     }
 }

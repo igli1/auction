@@ -1,4 +1,5 @@
 using auction.Helpers;
+using auction.Hubs;
 using auction.Models.Database;
 using auction.Models.Database.Entity;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Home/Index";
 });
 
+builder.Services.AddSignalR();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -60,5 +63,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<AuctionsHub>("/auctionsHub");
 
 app.Run();
