@@ -27,4 +27,5 @@ public class Product
     [Required]
     public ApplicationUser Seller { get; set; }
     public List<Bid> ProductBids { get; set; }
+    public SoldItem SoldItem { get; set; }
 }

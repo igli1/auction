@@ -50,6 +50,30 @@ public class AuctionDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.ReceivedTransactions)
             .HasForeignKey(t => t.ToUserId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<SoldItem>()
+            .HasOne(t => t.Seller)
+            .WithMany(u => u.Seller)
+            .HasForeignKey(t => t.SellerId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<SoldItem>()
+            .HasOne(t => t.Buyer)
+            .WithMany(u => u.Buyer)
+            .HasForeignKey(t => t.Buyerid)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<SoldItem>()
+            .HasOne(w => w.Product)
+            .WithOne(au => au.SoldItem)
+            .HasForeignKey<SoldItem>(w => w.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<SoldItem>()
+            .HasOne(w => w.Bid)
+            .WithOne(au => au.SoldItem)
+            .HasForeignKey<SoldItem>(w => w.BidId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);
     }

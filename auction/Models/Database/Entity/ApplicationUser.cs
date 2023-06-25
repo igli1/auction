@@ -18,4 +18,6 @@ public class ApplicationUser : IdentityUser
     public List<Bid> UserBids { get; set; }
     public List<Transaction> SentTransactions { get; set; }
     public List<Transaction> ReceivedTransactions { get; set; }
+    public List<SoldItem> Seller { get; set; }
+    public List<SoldItem> Buyer { get; set; }
 }

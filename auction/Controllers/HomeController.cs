@@ -34,11 +34,7 @@ public class HomeController : Controller
         var products = await Auctions(userId);
         
         var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
-        /*p.ProductBids.OrderByDescending(b => b.Amount)
-        var bids = await _context.Bid.Where(b => b.BidderId == userId)
-            .Where(b=> _context.Product.Any(p => 
-                p.ProductBids.OrderByDescending(pb=> pb.Amount).Any(pb => pb.Id == b.Id))).ToListAsync();*/
-        
+
         var bids = await _context.Bid
             .Where(b => b.BidderId == userId && _context.Bid
                 .Where(b2 => b2.ProductId == b.ProductId)

@@ -2,6 +2,7 @@ using auction.Helpers;
 using auction.Hubs;
 using auction.Models.Database;
 using auction.Models.Database.Entity;
+using auction.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog.Extensions.Logging;
@@ -45,6 +46,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddSignalR();
+
+builder.Services.AddHostedService<DailyTaskService>();
 
 builder.Services.AddControllersWithViews();
 

@@ -298,6 +298,46 @@ namespace auction.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
+            modelBuilder.Entity("auction.Models.Database.Entity.SoldItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BidId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Buyerid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BidId")
+                        .IsUnique();
+
+                    b.HasIndex("Buyerid");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("SoldItem");
+                });
+
             modelBuilder.Entity("auction.Models.Database.Entity.Transaction", b =>
                 {
                     b.Property<int>("Id")
@@ -435,6 +475,41 @@ namespace auction.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("auction.Models.Database.Entity.SoldItem", b =>
+                {
+                    b.HasOne("auction.Models.Database.Entity.Bid", "Bid")
+                        .WithOne("SoldItem")
+                        .HasForeignKey("auction.Models.Database.Entity.SoldItem", "BidId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("auction.Models.Database.Entity.ApplicationUser", "Buyer")
+                        .WithMany("Buyer")
+                        .HasForeignKey("Buyerid")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("auction.Models.Database.Entity.Product", "Product")
+                        .WithOne("SoldItem")
+                        .HasForeignKey("auction.Models.Database.Entity.SoldItem", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("auction.Models.Database.Entity.ApplicationUser", "Seller")
+                        .WithMany("Seller")
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Bid");
+
+                    b.Navigation("Buyer");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Seller");
+                });
+
             modelBuilder.Entity("auction.Models.Database.Entity.Transaction", b =>
                 {
                     b.HasOne("auction.Models.Database.Entity.ApplicationUser", "FromUser")
@@ -467,7 +542,11 @@ namespace auction.Migrations
 
             modelBuilder.Entity("auction.Models.Database.Entity.ApplicationUser", b =>
                 {
+                    b.Navigation("Buyer");
+
                     b.Navigation("ReceivedTransactions");
+
+                    b.Navigation("Seller");
 
                     b.Navigation("SentTransactions");
 
@@ -479,9 +558,18 @@ namespace auction.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("auction.Models.Database.Entity.Bid", b =>
+                {
+                    b.Navigation("SoldItem")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("auction.Models.Database.Entity.Product", b =>
                 {
                     b.Navigation("ProductBids");
+
+                    b.Navigation("SoldItem")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
