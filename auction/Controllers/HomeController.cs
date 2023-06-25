@@ -103,7 +103,7 @@ public class HomeController : Controller
             ProductId = p.Id,
             ProductName   = p.Name,
             IsCurrentUserProductOwner = p.Seller.Id == userId,
-            ProductOwner = p.Seller.FirstName + " " + p.Seller.LastName,
+            ProductOwner = p.Seller.UserName,
             DaysRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
             Description = p.Description,
             StartingPrice = p.StartingPrice,
