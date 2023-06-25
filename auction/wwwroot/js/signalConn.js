@@ -32,7 +32,7 @@ function updateTable(updatedAuctions){
 
         let productTd = document.createElement('td');
         let productLink = document.createElement('a');
-        productLink.href = `/ProductDetails?Id=${auction.productId}`;
+        productLink.href = `/ProductDetails/${auction.productId}`;
         productLink.textContent = auction.productName;
         productTd.appendChild(productLink);
 
@@ -53,7 +53,7 @@ function updateTable(updatedAuctions){
         let actionTd = document.createElement('td');
         if (auction.isCurrentUserProductOwner) {
             let deleteLink = document.createElement('a');
-            deleteLink.href = `/DeleteProduct?Id=${auction.productId}`;
+            deleteLink.href = `/DeleteProduct/${auction.productId}`;
             deleteLink.textContent = "Delete";
             deleteLink.classList.add("btn", "btn-danger");
             actionTd.appendChild(deleteLink);
