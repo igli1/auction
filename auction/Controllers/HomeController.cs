@@ -175,15 +175,17 @@ public class HomeController : Controller
 
     public async Task<IActionResult> UpdateAuctions()
     {
+        await _auctionHubContext.Clients.All.SendAsync("ReceiveUpdatedAuctions");
+        return Ok();
+    }
+    [HttpGet]
+    public async Task<JsonResult> GetAuctions()
+    {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         var products = await Auctions(userId);
-    
-        await _auctionHubContext.Clients.All.SendAsync("ReceiveUpdatedAuctions", products);
-
-        return Ok();
+        return new JsonResult(products);
     }
-
     public async Task<List<AuctionViewModel>> Auctions(string userId)
     {
         var products = await _context.Product
