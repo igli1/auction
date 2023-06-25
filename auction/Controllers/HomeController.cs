@@ -142,6 +142,7 @@ public class HomeController : Controller
         {
             BidderId = model.Userid,
             ProductId = model.ProductId,
+            Amount = model.BidAmount
         };
 
         await _context.Bid.AddAsync(bid);
@@ -199,7 +200,8 @@ public class HomeController : Controller
                 ProductName = p.Name,
                 SellerName = p.Seller.UserName,
                 TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
-                IsCurrentUserProductOwner = p.SellerId == userId
+                IsCurrentUserProductOwner = p.SellerId == userId,
+                TopBid = p.ProductBids.Max(b => (decimal?)b.Amount) ?? 0
             })
             .ToListAsync();
         
