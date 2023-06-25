@@ -117,6 +117,7 @@ public class HomeController : Controller
                 DaysRemaining = (x.Product.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
                 Description = x.Product.Description,
                 StartingPrice = x.Product.StartingPrice,
+                IsCurrentUserHighestBidder = x.HighestBid !=null ? x.HighestBid.Bidder.Id == userId : false,
                 HighestBid = x.HighestBid != null ? x.HighestBid.Amount : 0,
                 BidderName = x.HighestBid != null ? x.HighestBid.Bidder.UserName : ""
             }).FirstOrDefaultAsync();

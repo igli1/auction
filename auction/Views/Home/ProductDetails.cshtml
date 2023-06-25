@@ -1,4 +1,5 @@
-﻿@model auction.Models.ViewModels.ProductDetailsViewModel
+﻿@using Microsoft.EntityFrameworkCore
+@model auction.Models.ViewModels.ProductDetailsViewModel
 @{
     ViewData["Title"] = "Product Details";
     decimal minBid = Model?.HighestBid != 0 ? Model.HighestBid + 1 : Model.StartingPrice + 1;
@@ -50,7 +51,7 @@
             <p>$ @Model?.HighestBid</p>
         </div>
     </div>
-    @if (Model?.IsCurrentUserProductOwner != null && !@Model.IsCurrentUserProductOwner)
+    @if (!Model.IsCurrentUserProductOwner && !Model.IsCurrentUserHighestBidder)
     {
         <div class="col-md-4 offset-md-4">
             <form asp-action="NewBid" method="post" class="mx-auto">

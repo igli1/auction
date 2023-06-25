@@ -4,6 +4,7 @@ public class ProductDetailsViewModel
 {
     public string UserId { get; set; }
     public bool IsCurrentUserProductOwner { get; set; }
+    public bool IsCurrentUserHighestBidder { get; set; }
     public int ProductId { get; set; }
     public string ProductName { get; set; }
     public string ProductOwner { get; set; }
