@@ -4,18 +4,20 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using auction.Models.Database.Entity
 
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <label class="nav-link text-dark">Hello @UserManager.GetUserName(User)!</label>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-controller="User" asp-action="RegisterAndLogin">Login Register</a>
-    </li>
-}
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <label class="nav-link text-dark">Hello @UserManager.GetUserName(User)!</label>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="register" asp-controller="User" asp-action="RegisterAndLogin">Login Register</a>
+        </li>
+    }
+</ul>
