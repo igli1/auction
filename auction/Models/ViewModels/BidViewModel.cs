@@ -12,5 +12,5 @@ public class BidViewModel
     [Range(0.01, double.MaxValue, ErrorMessage = "Bid must be a positive value.")]
     public decimal BidAmount { get; set; }
     [Required]
-    public string Userid { get; set; }
+    public string UserId { get; set; }
 }

@@ -34,11 +34,27 @@ public class HomeController : Controller
         var products = await Auctions(userId);
         
         var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
+        /*p.ProductBids.OrderByDescending(b => b.Amount)
+        var bids = await _context.Bid.Where(b => b.BidderId == userId)
+            .Where(b=> _context.Product.Any(p => 
+                p.ProductBids.OrderByDescending(pb=> pb.Amount).Any(pb => pb.Id == b.Id))).ToListAsync();*/
+        
+        var bids = await _context.Bid
+            .Where(b => b.BidderId == userId && _context.Bid
+                .Where(b2 => b2.ProductId == b.ProductId)
+                .Max(b2 => b2.Amount) == b.Amount)
+            .ToListAsync();
+        decimal onHold = 0;
+
+        foreach (var bid in bids)
+        {
+            onHold += bid.Amount;
+        }
         
         var auction = new AuctionIndexViewModel
         {
             Auctions = products,
-            WalletValue = wallet?.Balance ?? 0
+            WalletValue = wallet?.Balance - onHold ?? 0
         };
         
         return View(auction);
@@ -95,7 +111,21 @@ public class HomeController : Controller
     public async Task<IActionResult> ProductDetails(int Id)
     {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
         var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
+        
+        var bids = await _context.Bid
+            .Where(b => b.BidderId == userId && _context.Bid
+                .Where(b2 => b2.ProductId == b.ProductId)
+                .Max(b2 => b2.Amount) == b.Amount)
+            .ToListAsync();
+        decimal onHold = 0;
+
+        foreach (var bid in bids)
+        {
+            onHold += bid.Amount;
+        }
+        
         var product = await _context.Product
             .Include(p => p.Seller)
             .Include(p => p.ProductBids)
@@ -109,7 +139,7 @@ public class HomeController : Controller
             .Select(x => new ProductDetailsViewModel
             {
                 UserId = userId,
-                UserBalance = wallet.Balance,
+                UserBalance = wallet.Balance - onHold,
                 ProductId = x.Product.Id,
                 ProductName = x.Product.Name,
                 IsCurrentUserProductOwner = x.Product.Seller.Id == userId,
@@ -132,30 +162,37 @@ public class HomeController : Controller
             return RedirectToAction("ProductDetails", new { id = model.ProductId });
         }
         
-        var wallet = await _context.Wallet.
-            Include(w => w.User)
-            .ThenInclude(u => u.UserBids)
-            .FirstOrDefaultAsync(w => w.UserId == model.Userid);
+        var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == model.UserId);
+
+        var bids = await _context.Bid
+            .Where(b => b.BidderId == model.UserId && _context.Bid
+                .Where(b2 => b2.ProductId == b.ProductId)
+                .Max(b2 => b2.Amount) == b.Amount)
+            .ToListAsync();
+        decimal onHold = 0;
+
+        foreach (var bid in bids)
+        {
+            onHold += bid.Amount;
+        }
         
         var productValid = await _context.Product.AnyAsync(p => p.Id == model.ProductId && !p.isDeleted);
         
-        var activeBidsTotal = wallet.User.UserBids?.Where(b => b.IsWinning == false).Sum(b => b.Amount);
-        var availableamount = wallet.Balance - activeBidsTotal;
+        var availableamount = wallet.Balance - onHold;
         
         if (wallet == null || !productValid || (availableamount < model.BidAmount))
         {
             return BadRequest();
         }
         
-        var bid = new Bid
+        var prductBid = new Bid
         {
-            BidderId = model.Userid,
+            BidderId = model.UserId,
             ProductId = model.ProductId,
             Amount = model.BidAmount
         };
 
-        await _context.Bid.AddAsync(bid);
-        _context.Wallet.Update(wallet);
+        await _context.Bid.AddAsync(prductBid);
 
         await _context.SaveChangesAsync();
         

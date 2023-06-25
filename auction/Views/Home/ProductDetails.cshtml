@@ -56,7 +56,7 @@
         <div class="col-md-4 offset-md-4">
             <form asp-action="NewBid" method="post" class="mx-auto">
                 <input asp-for="Bid.ProductId" class="form-control" hidden value="@Model.ProductId"/>
-                <input asp-for="Bid.Userid" class="form-control" hidden value="@Model.UserId"/>
+                <input asp-for="Bid.UserId" class="form-control" hidden value="@Model.UserId"/>
                 <div class="form-group">
                     @if(canBid)
                     {
