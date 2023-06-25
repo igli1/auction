@@ -24,6 +24,4 @@ public class Bid
     [Required]
     [DataType(DataType.DateTime)]
     public DateTime BidTime { get; set; }
-    [Required]
-    public bool IsWinning { get; set; } = false;
 }
