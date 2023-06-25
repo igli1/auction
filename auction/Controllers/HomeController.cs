@@ -29,6 +29,7 @@ public class HomeController : Controller
             .Include(n => n.Seller)
             .Include(p => p.ProductBids)
             .Where(p => !p.isDeleted && p.EndDate >= DateTime.UtcNow)
+            .OrderBy(p => p.EndDate)
             .Select(p => new AuctionViewModel
             {
                 ProductId = p.Id,
@@ -37,7 +38,6 @@ public class HomeController : Controller
                 TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
                 IsCurrentUserProductOwner = p.SellerId == userId
             })
-            .OrderBy(p => p.TimeRemaining)
             .ToListAsync();
         
         var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
