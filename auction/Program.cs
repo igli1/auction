@@ -4,8 +4,13 @@ using auction.Models.Database;
 using auction.Models.Database.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NLog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Trace);
+builder.Logging.AddNLog(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddDbContext<AuctionDbContext>(option =>
