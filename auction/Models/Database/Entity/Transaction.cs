@@ -21,7 +21,7 @@ public class Transaction
 
     [Required]
     [DataType(DataType.DateTime)]
-    [Timestamp]
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime Timestamp { get; set; }
     [Required]
     [ForeignKey("Buyer")]

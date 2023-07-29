@@ -23,6 +23,7 @@ public class Bid
     public decimal Amount { get; set; }
     [Required]
     [DataType(DataType.DateTime)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime BidTime { get; set; }
     public Transaction Transaction { get; set; }
 }
