@@ -12,6 +12,7 @@ public class AuctionDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Wallet> Wallet { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<Transaction> Transaction { get; set; }
+    public DbSet<SoldItem> SoldItem { get; set; }
     public DbSet<Bid> Bid { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,6 +21,7 @@ public class AuctionDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Product>().ToTable("Products");
         modelBuilder.Entity<Transaction>().ToTable("Transactions");
         modelBuilder.Entity<Bid>().ToTable("Bids");
+        modelBuilder.Entity<SoldItem>().ToTable("SoldItems");
         
         modelBuilder.Entity<Wallet>()
             .HasOne(w => w.User)
@@ -40,15 +42,21 @@ public class AuctionDbContext : IdentityDbContext<ApplicationUser>
             .OnDelete(DeleteBehavior.Restrict);
         
         modelBuilder.Entity<Transaction>()
-            .HasOne(t => t.FromUser)
+            .HasOne(t => t.Buyer)
             .WithMany(u => u.SentTransactions)
-            .HasForeignKey(t => t.FromUserId)
+            .HasForeignKey(t => t.BuyerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         modelBuilder.Entity<Transaction>()
-            .HasOne(t => t.ToUser)
+            .HasOne(t => t.Seller)
             .WithMany(u => u.ReceivedTransactions)
-            .HasForeignKey(t => t.ToUserId)
+            .HasForeignKey(t => t.SellerId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.Bid)
+            .WithOne(b => b.Transaction)
+            .HasForeignKey<Transaction>(t => t.BidId)
             .OnDelete(DeleteBehavior.Restrict);
         
         modelBuilder.Entity<SoldItem>()
@@ -70,9 +78,9 @@ public class AuctionDbContext : IdentityDbContext<ApplicationUser>
             .OnDelete(DeleteBehavior.Restrict);
         
         modelBuilder.Entity<SoldItem>()
-            .HasOne(w => w.Bid)
+            .HasOne(w => w.Transaction)
             .WithOne(au => au.SoldItem)
-            .HasForeignKey<SoldItem>(w => w.BidId)
+            .HasForeignKey<SoldItem>(w => w.TransactionId)
             .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);

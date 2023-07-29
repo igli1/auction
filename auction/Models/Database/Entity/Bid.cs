@@ -24,5 +24,5 @@ public class Bid
     [Required]
     [DataType(DataType.DateTime)]
     public DateTime BidTime { get; set; }
-    public SoldItem SoldItem { get; set; }
+    public Transaction Transaction { get; set; }
 }

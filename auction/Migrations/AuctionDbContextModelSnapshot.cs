@@ -309,9 +309,6 @@ namespace auction.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("BidId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Buyerid")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -323,10 +320,10 @@ namespace auction.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("BidId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.HasIndex("Buyerid");
 
@@ -335,7 +332,10 @@ namespace auction.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("SoldItem");
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
+                    b.ToTable("SoldItems", (string)null);
                 });
 
             modelBuilder.Entity("auction.Models.Database.Entity.Transaction", b =>
@@ -349,7 +349,14 @@ namespace auction.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("FromUserId")
+                    b.Property<int>("BidId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BuyerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SellerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -358,15 +365,14 @@ namespace auction.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ToUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("FromUserId");
+                    b.HasIndex("BidId")
+                        .IsUnique();
 
-                    b.HasIndex("ToUserId");
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("SellerId");
 
                     b.ToTable("Transactions", (string)null);
                 });
@@ -477,12 +483,6 @@ namespace auction.Migrations
 
             modelBuilder.Entity("auction.Models.Database.Entity.SoldItem", b =>
                 {
-                    b.HasOne("auction.Models.Database.Entity.Bid", "Bid")
-                        .WithOne("SoldItem")
-                        .HasForeignKey("auction.Models.Database.Entity.SoldItem", "BidId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("auction.Models.Database.Entity.ApplicationUser", "Buyer")
                         .WithMany("Buyer")
                         .HasForeignKey("Buyerid")
@@ -501,32 +501,46 @@ namespace auction.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Bid");
+                    b.HasOne("auction.Models.Database.Entity.Transaction", "Transaction")
+                        .WithOne("SoldItem")
+                        .HasForeignKey("auction.Models.Database.Entity.SoldItem", "TransactionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Buyer");
 
                     b.Navigation("Product");
 
                     b.Navigation("Seller");
+
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("auction.Models.Database.Entity.Transaction", b =>
                 {
-                    b.HasOne("auction.Models.Database.Entity.ApplicationUser", "FromUser")
+                    b.HasOne("auction.Models.Database.Entity.Bid", "Bid")
+                        .WithOne("Transaction")
+                        .HasForeignKey("auction.Models.Database.Entity.Transaction", "BidId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("auction.Models.Database.Entity.ApplicationUser", "Buyer")
                         .WithMany("SentTransactions")
-                        .HasForeignKey("FromUserId")
+                        .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("auction.Models.Database.Entity.ApplicationUser", "ToUser")
+                    b.HasOne("auction.Models.Database.Entity.ApplicationUser", "Seller")
                         .WithMany("ReceivedTransactions")
-                        .HasForeignKey("ToUserId")
+                        .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FromUser");
+                    b.Navigation("Bid");
 
-                    b.Navigation("ToUser");
+                    b.Navigation("Buyer");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("auction.Models.Database.Entity.Wallet", b =>
@@ -560,7 +574,7 @@ namespace auction.Migrations
 
             modelBuilder.Entity("auction.Models.Database.Entity.Bid", b =>
                 {
-                    b.Navigation("SoldItem")
+                    b.Navigation("Transaction")
                         .IsRequired();
                 });
 
@@ -568,6 +582,12 @@ namespace auction.Migrations
                 {
                     b.Navigation("ProductBids");
 
+                    b.Navigation("SoldItem")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("auction.Models.Database.Entity.Transaction", b =>
+                {
                     b.Navigation("SoldItem")
                         .IsRequired();
                 });

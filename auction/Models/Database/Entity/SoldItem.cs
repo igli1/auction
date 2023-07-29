@@ -26,8 +26,8 @@ public class SoldItem
     [Required]
     public Product Product { get; set; }
     [Required]
-    [ForeignKey("Bid")]
-    public int BidId { get; set; }
+    [ForeignKey("Transaction")]
+    public int TransactionId { get; set; }
     [Required]
-    public Bid Bid { get; set; }
+    public Transaction Transaction { get; set; }
 }

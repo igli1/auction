@@ -7,6 +7,12 @@ public class Transaction
 {
     [Key]
     public int Id { get; set; }
+    
+    [Required]
+    [ForeignKey("Bid")]
+    public int BidId { get; set; }
+    [Required]
+    public Bid Bid { get; set; }
 
     [Required]
     [DataType(DataType.Currency)]
@@ -18,15 +24,17 @@ public class Transaction
     [Timestamp]
     public DateTime Timestamp { get; set; }
     [Required]
-    [ForeignKey("FromUser")]
-    public string FromUserId { get; set; }
+    [ForeignKey("Buyer")]
+    public string BuyerId { get; set; }
     
     [Required]
-    public ApplicationUser FromUser { get; set; }
+    public ApplicationUser Buyer { get; set; }
     [Required]
-    [ForeignKey("ToUser")]
-    public string ToUserId { get; set; }
+    [ForeignKey("Seller")]
+    public string SellerId { get; set; }
 
     [Required]
-    public ApplicationUser ToUser { get; set; }
+    public ApplicationUser Seller { get; set; }
+
+    public SoldItem SoldItem { get; set; }
 }

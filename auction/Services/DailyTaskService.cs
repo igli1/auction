@@ -62,13 +62,21 @@ public class DailyTaskService : BackgroundService
                 {
                     var highestBid = product.ProductBids.OrderByDescending(b => b.Amount).FirstOrDefault();
 
+                    var transaction = new Transaction
+                    {
+                        SellerId = product.SellerId,
+                        BuyerId = highestBid.BidderId,
+                        BidId = highestBid.Id,
+                        Amount = highestBid.Amount
+                    };
+
                     var soldItem = new SoldItem
                     {
                         SellerId = product.SellerId,
                         Buyerid = highestBid.BidderId,
-                        BidId = highestBid.Id,
                         Amount = highestBid.Amount,
-                        ProductId = product.Id
+                        ProductId = product.Id,
+                        Transaction = transaction
                     };
                     soldItems.Add(soldItem);
 
