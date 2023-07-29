@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using auction.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace auction.Models.ViewModels;
@@ -7,6 +8,7 @@ public class Register
 {
     [Required]
     [StringLength(20, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 20 characters.")]
+    [AllowedCharacters(UserNameHelper.AllowedUserNameCharacters)]
     public string UserName { get; set; }
 
     [Required]
