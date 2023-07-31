@@ -1,5 +1,7 @@
-﻿using auction.Models.Database.Entity;
+﻿using System.Security.Claims;
+using auction.Models.Database.Entity;
 using auction.Models.ViewModels;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -110,5 +112,20 @@ public class UserController : Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("RegisterAndLogin");
+    }
+
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var profile = user.Adapt<UserProfileViewModel>();
+        return View(profile);
     }
 }

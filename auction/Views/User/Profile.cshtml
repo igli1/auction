@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model auction.Models.ViewModels.UserProfileViewModel
+@{
+    ViewData["Title"] = "User Profile Management";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>User Profile</h2>
+            <form>
+                <div class="form-group">
+                    <label asp-for="UserName">User Name</label>
+                    <input readonly asp-for="UserName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName">First Name</label>
+                    <input readonly asp-for="FirstName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName">Last Name</label>
+                    <input readonly asp-for="LastName" class="form-control" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
