@@ -95,7 +95,11 @@ public class UserController : Controller
             {
                 Register = model
             };
-            ModelState.AddModelError(string.Empty, result.Errors.ToString());
+            
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            };
             return View("RegisterAndLogin", rlVm);
         }
         

@@ -7,11 +7,16 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
+            <div class="row justify-content-center">
+                <div class="col-8 text-center">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-6">
                     <h2>Login</h2>
                     <form asp-action="Login" method="post">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
                         <div class="form-group">
                             <label asp-for="@Model.Login.UserName"></label>
                             <input asp-for="@Model.Login.UserName" name="Login.UserName" class="form-control"/>
@@ -38,22 +43,22 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="Register.FirstName"></label>
-                            <input asp-for="Register.FirstName"  class="form-control"/>
+                            <input asp-for="Register.FirstName" class="form-control"/>
                             <span asp-validation-for="@Model.Register.FirstName" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Register.LastName"></label>
-                            <input asp-for="Register.LastName"  class="form-control"/>
+                            <input asp-for="Register.LastName" class="form-control"/>
                             <span asp-validation-for="Register.LastName" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Register.Password"></label>
-                            <input asp-for="Register.Password"  type="password" class="form-control"/>
+                            <input asp-for="Register.Password" type="password" class="form-control"/>
                             <span asp-validation-for="Register.Password" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Register.ConfirmPassword"></label>
-                            <input asp-for="Register.ConfirmPassword"  type="password" class="form-control"/>
+                            <input asp-for="Register.ConfirmPassword" type="password" class="form-control"/>
                             <span asp-validation-for="Register.ConfirmPassword" class="text-danger"></span>
                         </div>
                         <br/>
