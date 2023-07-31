@@ -128,4 +128,49 @@ public class UserController : Controller
         var profile = user.Adapt<UserProfileViewModel>();
         return View(profile);
     }
+    
+    [Authorize]
+    public async Task<IActionResult> Wallet()
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var profile = user.Adapt<UserProfileViewModel>();
+        return View();
+    }
+    
+    [Authorize]
+    public async Task<IActionResult> Products()
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var profile = user.Adapt<UserProfileViewModel>();
+        return View();
+    }
+    
+    [Authorize]
+    public async Task<IActionResult> Bids()
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var profile = user.Adapt<UserProfileViewModel>();
+        return View();
+    }
 }
