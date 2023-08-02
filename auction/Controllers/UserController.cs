@@ -83,9 +83,11 @@ public class UserController : Controller
             Balance = 1000
         };
         
-        var applicationUser = new ApplicationUser() { UserName = model.UserName, 
+        var applicationUser = new ApplicationUser() { 
+            UserName = model.UserName, 
             FirstName = model.FirstName.ToLower(), 
             LastName = model.LastName.ToLower(),
+            Email = model.Email.ToLower(),
             Wallet = wallet
         };
         

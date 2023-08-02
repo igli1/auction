@@ -18,6 +18,10 @@ public class Register
     [Required]
     [StringLength(50, ErrorMessage = "Last name cannot exceed 50 characters.")]
     public string LastName { get; set; }
+    
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
 
     [Required]
     [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
