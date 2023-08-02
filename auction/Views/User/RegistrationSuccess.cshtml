@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Registration SuccessFull";
+    string username = ViewData["Username"] as string ?? "";
+}
+<h1>Registration Successful</h1>
+<p>Hello, @username! Your registration was successful.</p>
+
+<script>
+        function redirectAfterDelay() {
+            setTimeout(function () {
+                window.location.href = '/User/RegisterAndLogin';
+            }, 3000);
+        }
+        redirectAfterDelay();
+</script>

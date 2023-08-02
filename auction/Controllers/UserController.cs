@@ -105,7 +105,7 @@ public class UserController : Controller
             return View("RegisterAndLogin", rlVm);
         }
         
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("RegistrationSuccess", "User", new { username = model.UserName });
     }
     [Authorize]
     public async Task<IActionResult> Logout()
@@ -171,6 +171,12 @@ public class UserController : Controller
         }
 
         var profile = user.Adapt<UserProfileViewModel>();
+        return View();
+    }
+
+    public IActionResult RegistrationSuccess(string username)
+    {
+        ViewData["Username"] = username;
         return View();
     }
 }
