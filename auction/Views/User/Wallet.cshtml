@@ -1,6 +1,7 @@
 ﻿@model auction.Models.ViewModels.WalletViewModel
 @{
     ViewData["Title"] = "User Profile Management Wallet";
+    var totalWalletValue = Model.WalletValue + Model.OnHold;
 }
 
 <div class="container">
@@ -10,8 +11,25 @@
         </div>
         <div class="col-md-8 border-left">
             <h2>Wallet</h2>
-            <p>Your Wallet Value: <strong>@Model.WalletValue</strong></p><hr>
-            <p>Your OnHold Value: <strong>@Model.OnHold</strong></p><hr>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h4>Wallet Value</h4>
+                            <p class="lead"><strong>@Model.WalletValue</strong></p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h4>OnHold Value</h4>
+                            <p class="lead"><strong>@Model.OnHold</strong></p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h4>Total Wallet Value</h4>
+                            <p class="lead"><strong>@totalWalletValue</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
             <h3>Products Sold</h3>
             <table class="table">
                 <thead>
