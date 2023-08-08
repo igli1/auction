@@ -23,7 +23,7 @@ Follow the instructions in the Installation section to get AuctionHub up and run
 **bash Copy code:**  <kbd>docker build -t auction .</kbd>
 This will build a Docker image named auction using the instructions in the Dockerfile.
 
-Or you can test it on: Markup :  [Auction](https://auction.bytes-exchange.com/ "Auction")
+**Or you can test it on:  [Auction](https://auction.bytes-exchange.com/ "Auction")**
 
 <h2>**Support and Contribution**</h2>
 Feel free to contribute or report any issues to our GitHub repository. Your feedback is vital in making AuctionHub a better platform for everyone.
