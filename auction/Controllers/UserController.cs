@@ -166,7 +166,7 @@ public class UserController : Controller
             .GroupBy(si => 1)
             .Select(g => new WalletViewModel
             {
-                WalletValue = wallet.Balance - onHold,
+                WalletValue = wallet.Balance,
                 OnHold = onHold,
                 ProductsSold = g.Where(si => si.SellerId == userId).Select(si => new ProductsViewModel
                 {
