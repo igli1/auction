@@ -160,14 +160,12 @@ public class UserController : Controller
             onHold += bid.Amount;
         }
 
-        var products = _context.SoldItem
+        var response = _context.SoldItem
             .Include(si =>si.Transaction)
             .Where(si =>si.SellerId == userId || si.Buyerid == userId)
             .GroupBy(si => 1)
             .Select(g => new WalletViewModel
             {
-                WalletValue = wallet.Balance,
-                OnHold = onHold,
                 ProductsSold = g.Where(si => si.SellerId == userId).Select(si => new ProductsViewModel
                 {
                     Id = si.Product.Id,
@@ -184,7 +182,20 @@ public class UserController : Controller
                 }).ToList()
             }).FirstOrDefault();
         
-        return View(products);
+        
+        if (response == null)
+        {
+            response = new WalletViewModel
+            {
+                ProductsSold = new List<ProductsViewModel>(),
+                ProductsBought = new List<ProductsViewModel>()
+            };
+        }
+
+        response.WalletValue = wallet.Balance;
+        response.OnHold = onHold;
+        
+        return View(response);
     }
     
     [Authorize]
