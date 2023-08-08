@@ -167,6 +167,7 @@ public class UserController : Controller
             .Select(g => new WalletViewModel
             {
                 WalletValue = wallet.Balance - onHold,
+                OnHold = onHold,
                 ProductsSold = g.Where(si => si.SellerId == userId).Select(si => new ProductsViewModel
                 {
                     Id = si.Product.Id,
