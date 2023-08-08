@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
+using auction.Models.Database;
 using auction.Models.Database.Entity;
 using auction.Models.ViewModels;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace auction.Controllers;
 
@@ -12,11 +14,14 @@ public class UserController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly AuctionDbContext _context;
     public UserController(UserManager<ApplicationUser> userManager, 
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        AuctionDbContext context)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _context = context;
     }
     public IActionResult RegisterAndLogin()
     {
@@ -115,7 +120,6 @@ public class UserController : Controller
         await _signInManager.SignOutAsync();
         return RedirectToAction("RegisterAndLogin");
     }
-
     [Authorize]
     public async Task<IActionResult> Profile()
     {
@@ -142,8 +146,44 @@ public class UserController : Controller
             return NotFound();
         }
 
-        var profile = user.Adapt<UserProfileViewModel>();
-        return View();
+        var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
+        
+        var bids = await _context.Bid
+            .Where(b => b.BidderId == userId && _context.Bid
+                .Where(b2 => b2.ProductId == b.ProductId)
+                .Max(b2 => b2.Amount) == b.Amount)
+            .ToListAsync();
+        decimal onHold = 0;
+
+        foreach (var bid in bids)
+        {
+            onHold += bid.Amount;
+        }
+
+        var products = _context.SoldItem
+            .Include(si =>si.Transaction)
+            .Where(si =>si.SellerId == userId || si.Buyerid == userId)
+            .GroupBy(si => 1)
+            .Select(g => new WalletViewModel
+            {
+                WalletValue = wallet.Balance - onHold,
+                ProductsSold = g.Where(si => si.SellerId == userId).Select(si => new ProductsViewModel
+                {
+                    Id = si.Product.Id,
+                    Name = si.Product.Name,
+                    Price = si.Transaction.Bid.Amount,
+                    Date = si.Transaction.TransactionTime
+                }).ToList(),
+                ProductsBought = g.Where(si => si.Buyerid == userId).Select(si => new ProductsViewModel
+                {
+                    Id = si.Product.Id,
+                    Name = si.Product.Name,
+                    Price = si.Transaction.Bid.Amount,
+                    Date = si.Transaction.TransactionTime
+                }).ToList()
+            }).FirstOrDefault();
+        
+        return View(products);
     }
     
     [Authorize]

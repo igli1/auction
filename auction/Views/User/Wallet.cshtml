@@ -1,6 +1,6 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@model auction.Models.ViewModels.WalletViewModel
 @{
-    ViewData["Title"] = "User Profile Management";
+    ViewData["Title"] = "User Profile Management Wallet";
 }
 
 <div class="container">
@@ -10,7 +10,49 @@
         </div>
         <div class="col-md-8 border-left">
             <h2>Wallet</h2>
-            
+            <p>Your Wallet Value: @Model.WalletValue</p>
+
+            <h3>Products Sold</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Date Sold</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var product in Model.ProductsSold)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Products", "User", new { id = product.Id })">@product.Name</a></td>
+                        <td>@product.Price</td>
+                        <td>@product.Date.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            <h3>Products Bought</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Date Bought</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var product in Model.ProductsBought)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Products", "User", new { id = product.Id })">@product.Name</a></td>
+                        <td>@product.Price</td>
+                        <td>@product.Date.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
