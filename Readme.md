@@ -1,4 +1,4 @@
-`#`**AuctionHub - Your Online Auction Platform**
+`#**AuctionHub - Your Online Auction Platform**`
 Welcome to AuctionHub, the dynamic online auction platform designed to provide a seamless and interactive bidding experience for both sellers and buyers.
 
 `##`**Overview**
