@@ -181,6 +181,18 @@ public class UserController : Controller
                     Date = si.Transaction.TransactionTime
                 }).ToList()
             }).FirstOrDefault();
+
+        var productsOnSale = await _context.Product
+            .Include(p => p.SoldItem)
+            .Include(p =>p.ProductBids)
+            .Where(p => p.SellerId == userId && p.SoldItem == null).Select(p => new ProductsViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Date = p.EndDate,
+                Price = p.ProductBids.Any() ? p.ProductBids.Max(b => b.Amount) : p.StartingPrice
+            }).ToListAsync();
+
         
         
         if (response == null)
@@ -191,7 +203,13 @@ public class UserController : Controller
                 ProductsBought = new List<ProductsViewModel>()
             };
         }
-
+        
+        if (productsOnSale == null)
+        {
+            productsOnSale = new List<ProductsViewModel>();
+        }
+        
+        response.ProductsOnSale = productsOnSale;
         response.WalletTotalValue = wallet.Balance;
         response.OnHold = onHold;
         

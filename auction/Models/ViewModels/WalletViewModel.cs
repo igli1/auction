@@ -4,6 +4,7 @@ public class WalletViewModel
 {
     public decimal WalletTotalValue { get; set; }
     public decimal OnHold { get; set; }
+    public List<ProductsViewModel> ProductsOnSale { get; set; }
     public List<ProductsViewModel> ProductsSold { get; set; }
     public List<ProductsViewModel> ProductsBought { get; set; }
 }

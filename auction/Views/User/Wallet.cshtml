@@ -30,6 +30,29 @@
                 </div>
             </div>
             <hr>
+            <h3>Products On Sale</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Days Remaining</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var product in Model.ProductsOnSale)
+                {
+                    var daysRemaining = (product.Date - DateTime.Now).Days; // Calculate days remaining
+                    <tr>
+                        <td><a href="@Url.Action("Products", "User", new { id = product.Id })">@product.Name</a></td>
+                        <td>@product.Price</td>
+                        <td>@daysRemaining</td>
+                        <td><a class="btn btn-danger" asp-controller="Home" asp-action="DeleteProduct" asp-route-Id="@product.Id">Delete</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
             <h3>Products Sold</h3>
             <table class="table">
                 <thead>
