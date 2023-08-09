@@ -192,7 +192,7 @@ public class UserController : Controller
             };
         }
 
-        response.WalletValue = wallet.Balance;
+        response.WalletTotalValue = wallet.Balance;
         response.OnHold = onHold;
         
         return View(response);
