@@ -185,7 +185,7 @@ public class UserController : Controller
         var productsOnSale = await _context.Product
             .Include(p => p.SoldItem)
             .Include(p =>p.ProductBids)
-            .Where(p => p.SellerId == userId && p.SoldItem == null).Select(p => new ProductsViewModel
+            .Where(p => p.SellerId == userId && p.SoldItem == null && p.isDeleted == false).Select(p => new ProductsViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
