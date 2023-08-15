@@ -207,8 +207,10 @@ public class HomeController : Controller
         {
             return NotFound();
         }
+
+        product.isDeleted = true;
         
-        _context.Product.Remove(product);
+        _context.Product.Update(product);
         await _context.SaveChangesAsync();
         
         await UpdateAuctions();
