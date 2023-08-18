@@ -68,9 +68,15 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+ // Fallback
+app.MapFallbackToController("User/{*wildcard}", "Profile", "User");
+app.MapFallbackToController("{*wildcard}", "Index","Home");
 
 app.MapHub<AuctionsHub>("/auctionsHub");
 

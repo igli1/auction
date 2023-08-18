@@ -66,7 +66,7 @@
                 @foreach (var product in Model.ProductsSold)
                 {
                     <tr>
-                        <td><a href="@Url.Action("Products", "User", new { id = product.Id })">@product.Name</a></td>
+                        <td><a href="@Url.Action("ProductDetails", "Home", new { id = product.Id })">@product.Name</a></td>
                         <td>@product.Price</td>
                         <td>@product.Date.ToString("yyyy-MM-dd")</td>
                     </tr>
@@ -87,7 +87,7 @@
                 @foreach (var product in Model.ProductsBought)
                 {
                     <tr>
-                        <td><a href="@Url.Action("Products", "User", new { id = product.Id })">@product.Name</a></td>
+                        <td><a href="@Url.Action("ProductDetails", "Home", new { id = product.Id })">@product.Name</a></td>
                         <td>@product.Price</td>
                         <td>@product.Date.ToString("yyyy-MM-dd")</td>
                     </tr>

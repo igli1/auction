@@ -130,7 +130,7 @@ public class UserController : Controller
         {
             return NotFound();
         }
-
+    
         var profile = user.Adapt<UserProfileViewModel>();
         return View(profile);
     }
@@ -230,7 +230,6 @@ public class UserController : Controller
         var profile = user.Adapt<UserProfileViewModel>();
         return View();
     }
-
     public IActionResult RegistrationSuccess(string username)
     {
         ViewData["Username"] = username;
