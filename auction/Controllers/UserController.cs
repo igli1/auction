@@ -190,7 +190,8 @@ public class UserController : Controller
                 Id = p.Id,
                 Name = p.Name,
                 Date = p.EndDate,
-                Price = p.ProductBids.Any() ? p.ProductBids.Max(b => b.Amount) : p.StartingPrice
+                Price = p.ProductBids.Any() ? p.ProductBids.Max(b => b.Amount) : p.StartingPrice,
+                NumberOfBids = p.ProductBids.Count
             }).ToListAsync();
 
         
