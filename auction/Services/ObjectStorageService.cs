@@ -13,7 +13,7 @@ public class ObjectStorageService
     private readonly ILogger<ObjectStorageService> _logger;
     
 
-    public ObjectStorageService(IOptions<MinioConfiguration> options, IHttpClientFactory httpClientFactory, ILogger<ObjectStorageService> logger)
+    public ObjectStorageService(IOptions<MinioConfiguration> options, ILogger<ObjectStorageService> logger)
     {
         _logger = logger;
         _minioConfiguration = options.Value;
@@ -21,8 +21,9 @@ public class ObjectStorageService
         _minioClient = new MinioClient()
             .WithEndpoint(_minioConfiguration.Endpoint)
             .WithCredentials(_minioConfiguration.AccessKey, _minioConfiguration.SecretKey)
-            .WithSSL()
+            .WithSSL(_minioConfiguration.UseSSL)
             .Build();
+        
     }
 
     public async Task<Stream> GetFileAsync(string objectKey)
@@ -55,22 +56,44 @@ public class ObjectStorageService
         }
     }
     
-    public async Task UploadFileAsync(string objectKey, Stream fileStream)
+    public async Task<bool> UploadFileAsync(string objectKey, Stream fileStream)
     {
         try
         {
-            var contentType = "application/octet-stream";
-            var putObjectArgs = new PutObjectArgs()
-                .WithBucket(_minioConfiguration.BucketName)
-                .WithObject(objectKey)
-                .WithStreamData(fileStream)
-                .WithContentType(contentType);
+            var bktExistArg = new BucketExistsArgs().WithBucket(_minioConfiguration.BucketName);
+            bool found = await _minioClient.BucketExistsAsync(bktExistArg);
+            if (!found)
+            {
+                var mkBtExistArg = new MakeBucketArgs().WithBucket(_minioConfiguration.BucketName);
+                await _minioClient.MakeBucketAsync(mkBtExistArg);
+
+            }
+            else
+            {
+                var contentType = "application/octet-stream";
+                var putObjectArgs = new PutObjectArgs()
+                    .WithBucket(_minioConfiguration.BucketName)
+                    .WithObject(objectKey)
+                    .WithStreamData(fileStream)
+                    .WithContentType(contentType)
+                    .WithObjectSize(fileStream.Length);
             
-            await _minioClient.PutObjectAsync(putObjectArgs);
+                await _minioClient.PutObjectAsync(putObjectArgs);
+            }
         }
         catch (MinioException ex)
         {
             _logger.LogError(ex,"Error uploading the file to MinIO");
+            return false;
         }
+
+        var statObjectArgs = new StatObjectArgs()
+            .WithBucket(_minioConfiguration.BucketName)
+            .WithObject(objectKey);
+        
+        var objectStat = await _minioClient.StatObjectAsync(statObjectArgs);
+        if (objectStat != null)
+            return true;
+        return false;
     }
 }

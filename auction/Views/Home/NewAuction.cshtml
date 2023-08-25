@@ -5,7 +5,7 @@
 
 <div class="container">
     <h2>Create Auction</h2>
-    <form asp-action="NewAuction" method="post">
+    <form asp-action="NewAuction" method="post" enctype="multipart/form-data">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="row mt-3">
@@ -31,6 +31,10 @@
                         <input asp-for="EndDate" class="form-control" type="date" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")"/>
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>
+                        <div class="form-group">
+                            <label asp-for="Image">Upload Image</label>
+                            <input type="file" class="form-control" asp-for="Image" />
+                        </div>
                 </div>
                 <br/>
                 <div class="form-group">

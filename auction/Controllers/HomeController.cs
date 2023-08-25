@@ -10,6 +10,7 @@ using auction.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Minio;
 
 namespace auction.Controllers;
 
@@ -104,17 +105,17 @@ public class HomeController : Controller
         await _context.Product.AddAsync(product);
         await _context.SaveChangesAsync();
 
-        try
+        if (model.Image != null)
         {
-            byte[] imageBytes = Convert.FromBase64String(base64Image);
-            MemoryStream memoryStream = new MemoryStream(imageBytes);
-            await _minio.UploadFileAsync("asd", memoryStream);
+            try
+            {
+                await _minio.UploadFileAsync(Guid.NewGuid().ToString("N")+model.Image.FileName,model.Image.OpenReadStream() );
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error");
+            } 
         }
-        catch (Exception ex)
-        {
-            return RedirectToAction("Index");
-        }
-        
         
         await UpdateAuctions();
         
