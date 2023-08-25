@@ -94,6 +94,22 @@ public class HomeController : Controller
             model.EndDate = new DateTime(model.EndDate.Year, model.EndDate.Month, model.EndDate.Day, 12, 0, 0);
         }
 
+
+        string imageName = "";
+        bool insertion = false;
+        if (model.Image != null)
+        {
+            try
+            {
+                imageName = Guid.NewGuid().ToString("N") + model.Image.FileName;
+                insertion =await _minio.UploadFileAsync(imageName,model.Image.OpenReadStream() );
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error");
+            } 
+        }
+
         var product = new Product
         {
             Name = model.ProductName,
@@ -102,20 +118,14 @@ public class HomeController : Controller
             Description = model.Description,
             EndDate = model.EndDate
         };
+
+        if (insertion == true)
+            product.Image = imageName;
+        
         await _context.Product.AddAsync(product);
         await _context.SaveChangesAsync();
 
-        if (model.Image != null)
-        {
-            try
-            {
-                await _minio.UploadFileAsync(Guid.NewGuid().ToString("N")+model.Image.FileName,model.Image.OpenReadStream() );
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Error");
-            } 
-        }
+
         
         await UpdateAuctions();
         
