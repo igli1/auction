@@ -1,3 +1,4 @@
+using auction.Configuration;
 using auction.Helpers;
 using auction.Hubs;
 using auction.Models.Database;
@@ -5,6 +6,8 @@ using auction.Models.Database.Entity;
 using auction.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Minio;
 using NLog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,7 +51,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddSignalR();
 
 builder.Services.AddHostedService<DailyTaskService>();
-
+builder.Services.Configure<MinioConfiguration>(builder.Configuration.GetSection(MinioConfiguration.SettingsSection));
+builder.Services.AddSingleton<ObjectStorageService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

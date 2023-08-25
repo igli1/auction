@@ -14,6 +14,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.7" />
+      <PackageReference Include="Minio" Version="5.0.0" />
       <PackageReference Include="NLog" Version="5.2.2" />
       <PackageReference Include="NLog.Mongo" Version="4.7.0" />
       <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.5" />
@@ -22,6 +23,7 @@
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Pages\User\Create.cshtml" />
     </ItemGroup>
+
 
 
 </Project>

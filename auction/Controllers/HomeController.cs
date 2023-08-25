@@ -6,6 +6,7 @@ using auction.Models;
 using auction.Models.Database;
 using auction.Models.Database.Entity;
 using auction.Models.ViewModels;
+using auction.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -18,14 +19,17 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly AuctionDbContext _context;
     private readonly IHubContext<AuctionsHub> _auctionHubContext;
-
+    private readonly string base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC";
+    private readonly ObjectStorageService  _minio;
     public HomeController(ILogger<HomeController> logger, 
         AuctionDbContext context,
-        IHubContext<AuctionsHub> auctionHubContext)
+        IHubContext<AuctionsHub> auctionHubContext,
+        ObjectStorageService  minio)
     {
         _logger = logger;
         _context = context;
         _auctionHubContext = auctionHubContext;
+        _minio = minio;
     }
     public async Task<IActionResult> Index()
     {
@@ -99,6 +103,18 @@ public class HomeController : Controller
         };
         await _context.Product.AddAsync(product);
         await _context.SaveChangesAsync();
+
+        try
+        {
+            byte[] imageBytes = Convert.FromBase64String(base64Image);
+            MemoryStream memoryStream = new MemoryStream(imageBytes);
+            await _minio.UploadFileAsync("asd", memoryStream);
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction("Index");
+        }
+        
         
         await UpdateAuctions();
         
