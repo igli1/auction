@@ -42,6 +42,14 @@
             <p>@Model?.Description</p>
         </div>
     </div>
+    @if (!String.IsNullOrEmpty(@Model.ImageName))
+    {
+        <div class="row">
+            <div class="col-md-12 offset-md-3">
+                <img src="@Url.Action("GetImage", "Home", new { imageName = @Model.ImageName })">
+            </div>
+        </div>
+    }
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="row">

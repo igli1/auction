@@ -15,4 +15,5 @@ public class ProductDetailsViewModel
     public decimal StartingPrice { get; set; }
     public decimal UserBalance { get; set; }
     public BidViewModel Bid { get; set; }
+    public string ImageName { get; set; }
 }
