@@ -150,7 +150,7 @@ public class UserController : Controller
         
         var bids = await _context.Bid
             .Where(b => b.BidderId == userId && _context.Bid
-                .Where(b2 => b2.ProductId == b.ProductId)
+                .Where(b2 => b2.ProductId == b.ProductId && b2.Product.isDeleted == false)
                 .Max(b2 => b2.Amount) == b.Amount)
             .ToListAsync();
         decimal onHold = 0;
