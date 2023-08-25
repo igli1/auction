@@ -172,9 +172,10 @@ public class HomeController : Controller
                 StartingPrice = x.Product.StartingPrice,
                 IsCurrentUserHighestBidder = x.HighestBid !=null ? x.HighestBid.Bidder.Id == userId : false,
                 HighestBid = x.HighestBid != null ? x.HighestBid.Amount : 0,
-                BidderName = x.HighestBid != null ? x.HighestBid.Bidder.UserName : ""
+                BidderName = x.HighestBid != null ? x.HighestBid.Bidder.UserName : "",
+                ImageName = x.Product.Image
             }).FirstOrDefaultAsync();
-        
+            
         return View(product);
     }
     [HttpPost]
@@ -277,5 +278,19 @@ public class HomeController : Controller
             .ToListAsync();
         
         return products;
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetImage(string imageName)
+    {
+        try
+        {
+            var stream = await _minio.GetFileAsync(imageName);
+            return File(stream, "image/jpeg"); 
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving the image.");
+            return NotFound();
+        }
     }
 }

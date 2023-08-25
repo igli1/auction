@@ -1,5 +1,4 @@
-﻿@using Microsoft.EntityFrameworkCore
-@model auction.Models.ViewModels.ProductDetailsViewModel
+﻿@model auction.Models.ViewModels.ProductDetailsViewModel
 @{
     ViewData["Title"] = "Product Details";
     decimal minBid = Model?.HighestBid != 0 ? Model.HighestBid + 1 : Model.StartingPrice + 1;
@@ -42,14 +41,6 @@
             <p>@Model?.Description</p>
         </div>
     </div>
-    @if (!String.IsNullOrEmpty(@Model.ImageName))
-    {
-        <div class="row">
-            <div class="col-md-12 offset-md-3">
-                <img src="@Url.Action("GetImage", "Home", new { imageName = @Model.ImageName })">
-            </div>
-        </div>
-    }
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="row">
@@ -95,4 +86,12 @@
             </form>
         </div>
     }
+        @if (!String.IsNullOrEmpty(@Model.ImageName))
+        {
+            <div class="row">
+                <div class="col-md-12 offset-md-3">
+                    <img src="@Url.Action("GetImage", "Home", new { imageName = @Model.ImageName })" width="300" height="300">
+                </div>
+            </div>
+        }
 </div>
