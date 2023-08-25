@@ -21,7 +21,15 @@
     </div>
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <p>Time Remaining: @Model?.DaysRemaining days</p>
+            <p>Time Remaining: @if(!String.IsNullOrEmpty(@Model.DaysRemaining) && @Model.DaysRemaining.Contains("-"))
+                               {
+                                   @:Auction ended
+                               }
+                               else
+                               {
+                                   @Model?.DaysRemaining @: days
+                               }
+                 </p>
         </div>
     </div>
         <div class="row">

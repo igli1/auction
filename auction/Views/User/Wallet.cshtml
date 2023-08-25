@@ -49,7 +49,16 @@
                         <td><a href="@Url.Action("ProductDetails", "Home", new { id = product.Id })">@product.Name</a></td>
                         <td>@product.Price</td>
                         <td>@product.NumberOfBids</td>
-                        <td>@daysRemaining</td>
+                        <td>
+                            @if(daysRemaining < 0)
+                            {
+                                @:Auction ended
+                            }
+                            else
+                            {
+                                @daysRemaining
+                            }
+                        </td>
                         <td><a class="btn btn-danger" asp-controller="Home" asp-action="DeleteProduct" asp-route-Id="@product.Id">Delete</a></td>
                     </tr>
                 }
