@@ -1,14 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using auction.Models.Database.Entity
-
+@{
+    var currentUserId = UserManager.GetUserId(User);
+    var currentUser = UserManager.FindByIdAsync(currentUserId).Result; 
+    var profileImageName = currentUser?.ProfilePicture;
+}
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="User" asp-action="Profile">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li>
+            <a class="nav-link text-dark" asp-controller="User" asp-action="Profile">
+                <img src="@Url.Action("GetImage", "User", new { imageName = @profileImageName })" alt="Profile" width="40" height="40" class="rounded-circle mr-2">
+            </a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>

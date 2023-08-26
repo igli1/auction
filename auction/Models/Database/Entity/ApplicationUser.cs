@@ -14,6 +14,7 @@ public class ApplicationUser : IdentityUser
     public string LastName { get; set; }
     [Required]
     public Wallet Wallet { get; set; }
+    public string ProfilePicture { get; set; }
     public List<Product> UserProducts  { get; set; }
     public List<Bid> UserBids { get; set; }
     public List<Transaction> SentTransactions { get; set; }

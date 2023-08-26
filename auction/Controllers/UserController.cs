@@ -2,6 +2,7 @@
 using auction.Models.Database;
 using auction.Models.Database.Entity;
 using auction.Models.ViewModels;
+using auction.Services;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,13 +16,19 @@ public class UserController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly AuctionDbContext _context;
+    private readonly ObjectStorageService  _minio;
+    private readonly IWebHostEnvironment _env;
     public UserController(UserManager<ApplicationUser> userManager, 
         SignInManager<ApplicationUser> signInManager,
-        AuctionDbContext context)
+        AuctionDbContext context,
+    ObjectStorageService minio,
+        IWebHostEnvironment env)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _context = context;
+        _minio = minio;
+        _env = env;
     }
     public IActionResult RegisterAndLogin()
     {
@@ -235,5 +242,28 @@ public class UserController : Controller
     {
         ViewData["Username"] = username;
         return View();
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetImage(string imageName)
+    {
+        try
+        {
+            var stream = await _minio.GetFileAsync(imageName);
+            var file = File(stream, "image/*"); 
+            if(file == null)
+                return ReturnDefaultImage();
+            return file;
+        }
+        catch (Exception ex)
+        {
+            return ReturnDefaultImage();
+        }
+    }
+    private IActionResult ReturnDefaultImage()
+    {
+        var path = _env.WebRootPath ;
+        var imagePath = Path.Combine(path, "Image", "Profile.webp");
+        return PhysicalFile(imagePath, "image/webp");
     }
 }

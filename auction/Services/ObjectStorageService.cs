@@ -52,7 +52,7 @@ public class ObjectStorageService
         catch (MinioException ex)
         {
             _logger.LogError(ex,"Error getting the file from MinIO");
-            return new MemoryStream();
+            return null;
         }
     }
     
