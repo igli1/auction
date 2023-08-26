@@ -4,7 +4,13 @@
     decimal minBid = Model?.HighestBid != 0 ? Model.HighestBid + 1 : Model.StartingPrice + 1;
     bool canBid = minBid <= Model.UserBalance;
 }
-
+@section Scripts {
+    <script src="js/imgSpinner.js" asp-append-version="true"></script>
+}
+@section Styles
+{
+<link rel="stylesheet" href="/css/imgSpinner.css" asp-append-version="true"/>
+}
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
@@ -28,14 +34,14 @@
                                {
                                    @Model?.DaysRemaining @: days
                                }
-                 </p>
+            </p>
         </div>
     </div>
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <p>Starting Bid: $@Model?.StartingPrice</p>
-            </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <p>Starting Bid: $@Model?.StartingPrice</p>
         </div>
+    </div>
     <div class="row">
         <div class="col-md-12 offset-md-3">
             <p>@Model?.Description</p>
@@ -86,12 +92,14 @@
             </form>
         </div>
     }
-        @if (!String.IsNullOrEmpty(@Model.ImageName))
-        {
-            <div class="row">
-                <div class="col-md-12 offset-md-3">
-                    <img src="@Url.Action("GetImage", "Home", new { imageName = @Model.ImageName })" width="300" height="300">
-                </div>
+    @if (!String.IsNullOrEmpty(@Model.ImageName))
+    {
+        <div class="row">
+            <div class="col-md-12 offset-md-3 image-container">
+                <img id="loading-image" src="@Url.Action("GetImage", "Home", new { imageName = @Model.ImageName })" width="300" height="300">
+                <span class="spinner-grow spinner-grow-sm image-spinner" role="status" aria-hidden="true" id="create-link-spinner"></span>
+                <i class="bi bi-link-45deg"></i>
             </div>
-        }
+        </div>
+    }
 </div>
