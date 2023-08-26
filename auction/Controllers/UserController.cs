@@ -143,6 +143,44 @@ public class UserController : Controller
     }
     
     [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Profile([FromForm] UserProfileViewModel model)
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        
+        string imageName = "";
+        bool insertion = false;
+        if (model.Image != null)
+        {
+            try
+            {
+                imageName = Guid.NewGuid().ToString("N") + model.Image.FileName;
+                insertion =await _minio.UploadFileAsync(imageName,model.Image.OpenReadStream() );
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home");
+            } 
+        }
+
+        if (insertion)
+        {
+            user.ProfilePicture = imageName;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+        }
+        var profile = user.Adapt<UserProfileViewModel>();
+        return View(profile);
+    }
+    
+    [Authorize]
     public async Task<IActionResult> Wallet()
     {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

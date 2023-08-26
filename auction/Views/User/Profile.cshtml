@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model auction.Models.ViewModels.UserProfileViewModel
+﻿@model auction.Models.ViewModels.UserProfileViewModel
 @{
     ViewData["Title"] = "User Profile Management";
 }
@@ -11,7 +10,7 @@
         </div>
         <div class="col-md-8 border-left">
             <h2>User Profile</h2>
-            <form>
+            <form asp-action="Profile" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label asp-for="UserName">User Name</label>
                     <input readonly asp-for="UserName" class="form-control" />
@@ -27,6 +26,14 @@
                 <div class="form-group">
                     <label asp-for="LastName">Last Name</label>
                     <input readonly asp-for="LastName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Image">Upload Image</label>
+                    <input type="file" class="form-control" asp-for="Image" />
+                </div>
+                <br/>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit Profile</button>
                 </div>
             </form>
         </div>
