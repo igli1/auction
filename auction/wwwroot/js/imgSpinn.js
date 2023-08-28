@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+ function load() {
     const images = document.querySelectorAll('.loading-image');
     images.forEach(img => {
         const spinner = img.nextElementSibling;
@@ -11,14 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         }
     });
-});
+}
+function hideSpinnerDetails(imgElement) {
 
-function hideSpinner(imgElement) {
-    
     const spinner = imgElement.nextElementSibling;
-    console.log(spinner);
     if (spinner && spinner.classList.contains('image-spinner')) {
-        console.log(true);
         spinner.style.display = 'none';
     }
 }

@@ -25,9 +25,9 @@
                         @foreach (var auction in Model.Auctions)
                         {
                             <tr>
-                                <td>
-                                    <img src="@Url.Action("GetImage", "Home", new { imageName = auction.ProductPhoto })" alt="Product Image" width="150" height="150"/>
-                                    <span class="spinner-grow spinner-grow-sm image-spinner" role="status" aria-hidden="true" id="create-link-spinner"></span>
+                                <td class="image-container-home">
+                                    <img src="@Url.Action("GetImage", "Home", new { imageName = auction.ProductPhoto })" alt="Product Image" class="loading-image" width="150" height="150" onload="hideSpinner(this)"/>
+                                    <span class="spinner-grow spinner-grow-sm image-spinner image-spinner-home" role="status" aria-hidden="true"></span>
                                     <i class="bi bi-link-45deg"></i>
                                 </td>
                                 <td>

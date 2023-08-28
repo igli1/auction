@@ -1,15 +1,19 @@
 /* Spinner */
-
-.image-container {
+.image-container-home {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 150px; /* width of the image */
+    height: 150px; /* height of the image */
 }
-
-#loading-image {
+.image-container-details {
+    position: relative;
+    width: 300px; /* width of the image */
+    height: 300px; /* height of the image */
+}
+.loading-image {
     width: 100%;
     height: 100%;
     display: block;
+    visibility: hidden; /* Hide the image initially and let it appear once loaded */
 }
 
 .image-spinner {
@@ -17,5 +21,13 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: none;
+}
+
+.image-spinner-home {
+    width: 150px;
+    height: 150px;
+}
+.image-spinner-details {
+    width: 300px;
+    height: 300px;
 }

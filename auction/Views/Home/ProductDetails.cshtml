@@ -4,14 +4,7 @@
     decimal minBid = Model?.HighestBid != 0 ? Model.HighestBid + 1 : Model.StartingPrice + 1;
     bool canBid = minBid <= Model.UserBalance;
 }
-@section Scripts {
-    <script src="js/imgSpinner.js" asp-append-version="true"></script>
-}
-@section Styles
-{
-<link rel="stylesheet" href="/css/imgSpinner.css" asp-append-version="true"/>
-}
-<div class="container">
+<div class="container" onload="load()">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="row">
@@ -95,11 +88,18 @@
     @if (!String.IsNullOrEmpty(@Model.ImageName))
     {
         <div class="row">
-            <div class="col-md-12 offset-md-3 image-container">
-                <img id="loading-image" src="@Url.Action("GetImage", "Home", new { imageName = @Model.ImageName })" width="300" height="300">
-                <span class="spinner-grow spinner-grow-sm image-spinner" role="status" aria-hidden="true" id="create-link-spinner"></span>
+            <div class="col-md-12 offset-md-3 image-container-details">
+                <img src="@Url.Action("GetImage", "Home", new { imageName = @Model.ImageName })" width="300" height="300" onload="hideSpinnerDetails(this)">
+                <span class="spinner-grow spinner-grow-sm image-spinner image-spinner-details" role="status" aria-hidden="true" id="create-link-spinner"></span>
                 <i class="bi bi-link-45deg"></i>
             </div>
         </div>
     }
 </div>
+@section Scripts {
+    <script src="/js/imgSpinn.js" asp-append-version="true"></script>
+}
+@section Styles
+{
+    <link rel="stylesheet" href="/css/imgSpinner.css" asp-append-version="true"/>
+}
