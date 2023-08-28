@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using auction.Helpers;
 
 namespace auction.Models.ViewModels;
 
@@ -17,5 +18,6 @@ public class CreateAuctionViewModel
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
     public DateTime EndDate { get; set; } = DateTime.Today.AddDays(1).Date.AddHours(12);
+    [MaxFileSize(5 * 1024 * 1024)] // 5MB
     public IFormFile? Image { get; set; }
 }
