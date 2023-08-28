@@ -8,4 +8,5 @@ public class AuctionViewModel
     public decimal TopBid { get; set; }
     public string TimeRemaining { get; set; }
     public bool IsCurrentUserProductOwner { get; set; }
+    public string ProductPhoto { get; set; }
 }

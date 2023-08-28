@@ -11,6 +11,7 @@
                 <table class="table">
                     <thead>
                     <tr>
+                        <th>Photo</th>
                         <th>Product</th>
                         <th>Seller</th>
                         <th>Top Bid</th>
@@ -24,6 +25,11 @@
                         @foreach (var auction in Model.Auctions)
                         {
                             <tr>
+                                <td>
+                                    <img src="@Url.Action("GetImage", "Home", new { imageName = auction.ProductPhoto })" alt="Product Image" width="150" height="150"/>
+                                    <span class="spinner-grow spinner-grow-sm image-spinner" role="status" aria-hidden="true" id="create-link-spinner"></span>
+                                    <i class="bi bi-link-45deg"></i>
+                                </td>
                                 <td>
                                     <a asp-action="ProductDetails" asp-route-Id="@auction.ProductId">@auction.ProductName</a>
                                 </td>
@@ -70,4 +76,5 @@
 @section Scripts{
     <script src="~/lib/signalr/signalr.js"></script>
     <script src="~/js/signalConn.js" asp-append-version="true"></script>
+    <script src="~/js/imgSpinner.js" asp-append-version="true"></script>
 }

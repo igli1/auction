@@ -20,17 +20,19 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly AuctionDbContext _context;
     private readonly IHubContext<AuctionsHub> _auctionHubContext;
-    private readonly string base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC";
     private readonly ObjectStorageService  _minio;
+    private readonly IWebHostEnvironment _env;
     public HomeController(ILogger<HomeController> logger, 
         AuctionDbContext context,
         IHubContext<AuctionsHub> auctionHubContext,
-        ObjectStorageService  minio)
+        ObjectStorageService  minio,
+        IWebHostEnvironment env)
     {
         _logger = logger;
         _context = context;
         _auctionHubContext = auctionHubContext;
         _minio = minio;
+        _env = env;
     }
     public async Task<IActionResult> Index()
     {
@@ -273,7 +275,8 @@ public class HomeController : Controller
                 SellerName = p.Seller.UserName,
                 TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
                 IsCurrentUserProductOwner = p.SellerId == userId,
-                TopBid = p.ProductBids.Max(b => (decimal?)b.Amount) ?? 0
+                TopBid = p.ProductBids.Max(b => (decimal?)b.Amount) ?? 0,
+                ProductPhoto = p.Image
             })
             .ToListAsync();
         
@@ -285,12 +288,21 @@ public class HomeController : Controller
         try
         {
             var stream = await _minio.GetFileAsync(imageName);
-            return File(stream, "image/jpeg"); 
+            var file = File(stream, "image/*");
+            if(file == null)
+                return ReturnDefaultImage();
+            return file;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving the image.");
-            return NotFound();
+            return ReturnDefaultImage();
         }
+    }
+    
+    private IActionResult ReturnDefaultImage()
+    {
+        var path = _env.WebRootPath ;
+        var imagePath = Path.Combine(path, "Image", "product.jpg");
+        return PhysicalFile(imagePath, "image/*");
     }
 }
