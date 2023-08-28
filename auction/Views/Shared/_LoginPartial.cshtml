@@ -15,7 +15,7 @@
         </li>
         <li>
             <a class="nav-link text-dark" asp-controller="User" asp-action="Profile">
-                <img src="@Url.Action("GetImage", "User", new { imageName = @profileImageName })" alt="Profile" width="40" height="40" class="rounded-circle mr-2">
+                <img src="@Url.Action("GetImage", "ObjectStorage", new { imageName = @profileImageName, isProfile = true })" alt="Profile" width="40" height="40" class="rounded-circle mr-2">
             </a>
         </li>
         <li class="nav-item">
