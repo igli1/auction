@@ -146,6 +146,11 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> Profile([FromForm] UserProfileViewModel model)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+        
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var user = await _userManager.FindByIdAsync(userId);
         
