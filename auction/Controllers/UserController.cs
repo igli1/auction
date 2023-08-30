@@ -278,8 +278,28 @@ public class UserController : Controller
             return NotFound();
         }
 
-        var profile = user.Adapt<UserProfileViewModel>();
-        return View();
+
+        var bidsList = _context.Bid
+            .Include(b=>b.Product)
+            .Where(b => b.BidderId == user.Id && b.Product.isDeleted == false).Select(b => new 
+            {
+                Bid = b,
+                MaxBidForProduct = _context.Bid.Where(x => x.ProductId == b.ProductId).Max(x => x.Amount),
+                AuctionEnded = DateTime.Now > b.Product.EndDate
+            }).Select(b => new UserBidsViewModel
+        {
+            ProductName = b.Bid.Product.Name,
+            ProductId = b.Bid.ProductId,
+            BidAmount = b.Bid.Amount,
+            InitialAmount = b.Bid.Product.StartingPrice,
+            BidStatus = b.Bid.Amount == b.MaxBidForProduct 
+                ? (b.AuctionEnded ? "Won" : "Top-Bidder")
+                : "Lost",
+            EndDate = b.Bid.Product.EndDate
+        }).ToList();
+        
+        
+        return View(bidsList);
     }
     public IActionResult RegistrationSuccess(string username)
     {

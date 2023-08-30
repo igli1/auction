@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Trace);
-builder.Logging.AddNLog(builder.Configuration);
+//builder.Logging.AddNLog(builder.Configuration);
 
 builder.Services.Configure<MinioConfiguration>(builder.Configuration.GetSection(MinioConfiguration.SettingsSection));
 builder.Services.AddSingleton<ObjectStorageService>();
