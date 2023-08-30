@@ -6,58 +6,57 @@
 <div class="container">
     <h2>Auctions</h2>
     <div class="row">
-        <div class="col-md-8">
-            <div class="border border-dark p-3">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Photo</th>
-                        <th>Product</th>
-                        <th>Seller</th>
-                        <th>Top Bid</th>
-                        <th>Time Remaining</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if (Model?.Auctions != null)
+        <div class="col-lg-6 mx-auto">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Product</th>
+                    <th>Seller</th>
+                    <th>Top Bid</th>
+                    <th>Time Remaining</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (Model?.Auctions != null)
+                {
+                    @foreach (var auction in Model.Auctions)
                     {
-                        @foreach (var auction in Model.Auctions)
-                        {
-                            <tr>
-                                <td class="image-container-home">
-                                    <img src="@Url.Action("GetImage", "Home", new { imageName = auction.ProductPhoto })" alt="Product Image" class="loading-image" width="150" height="150" onload="hideSpinner(this)"/>
-                                    <span class="spinner-grow spinner-grow-sm image-spinner image-spinner-home" role="status" aria-hidden="true"></span>
-                                    <i class="bi bi-link-45deg"></i>
-                                </td>
-                                <td>
-                                    <a asp-action="ProductDetails" asp-route-Id="@auction.ProductId">@auction.ProductName</a>
-                                </td>
-                                <td>
-                                    @auction.SellerName
-                                    @if (auction.IsCurrentUserProductOwner)
-                                    {
-                                        <span>(You)</span>
-                                    }
-                                </td>
-                                <td>@auction?.TopBid</td>
-                                <td>@auction.TimeRemaining Days</td>
-                                <td>
-                                    @if (auction.IsCurrentUserProductOwner)
-                                    {
-                                        <a class="btn btn-danger" asp-action="DeleteProduct" asp-route-Id="@auction.ProductId">Delete</a>
-                                    }
-                                    else
-                                    {
-                                        <span></span>
-                                    }
-                                </td>
-                            </tr>
-                        }
+                        <tr>
+                            <td class="image-container-home">
+                                <img src="@Url.Action("GetImage", "Home", new { imageName = auction.ProductPhoto })" alt="Product Image" class="loading-image" width="150" height="150" onload="hideSpinner(this)"/>
+                                <div class="spinner-border text-primary image-spinner" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <a asp-action="ProductDetails" asp-route-Id="@auction.ProductId">@auction.ProductName</a>
+                            </td>
+                            <td>
+                                @auction.SellerName
+                                @if (auction.IsCurrentUserProductOwner)
+                                {
+                                    <span>(You)</span>
+                                }
+                            </td>
+                            <td>@auction?.TopBid</td>
+                            <td>@auction.TimeRemaining Days</td>
+                            <td>
+                                @if (auction.IsCurrentUserProductOwner)
+                                {
+                                    <a class="btn btn-danger" asp-action="DeleteProduct" asp-route-Id="@auction.ProductId">Delete</a>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
+                            </td>
+                        </tr>
                     }
-                    </tbody>
-                </table>
-            </div>
+                }
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row mt-3">

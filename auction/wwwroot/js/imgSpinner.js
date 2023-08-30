@@ -14,11 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function hideSpinner(imgElement) {
-    
     const spinner = imgElement.nextElementSibling;
-    console.log(spinner);
-    if (spinner && spinner.classList.contains('image-spinner')) {
-        console.log(true);
+    if (spinner) {
         spinner.style.display = 'none';
     }
 }
