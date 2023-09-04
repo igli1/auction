@@ -30,6 +30,22 @@ function updateTable(updatedAuctions){
     updatedAuctions.forEach(function(auction) {
         let tr = document.createElement('tr');
 
+        let imgTd = document.createElement('td');
+        imgTd.className = "image-container-home";
+        let image = document.createElement('img');
+        image.src = `/Home/GetImage?imageName=${auction.productPhoto}`;
+        image.alt = "Product Image";
+        image.className = "loading-image";
+        image.width = "150";
+        image.height = "150";
+        image.onload = function() {
+            hideSpinner(this);
+        };
+        let spinnerDiv = document.createElement('div');
+        spinnerDiv.className = "spinner-border text-primary image-spinner";
+        imgTd.appendChild(image);
+        imgTd.appendChild(spinnerDiv);
+
         let productTd = document.createElement('td');
         let productLink = document.createElement('a');
         productLink.href = `/Home/ProductDetails/${auction.productId}`;
@@ -48,7 +64,7 @@ function updateTable(updatedAuctions){
         topBidTd.textContent = auction.topBid;
 
         let timeRemainingTd = document.createElement('td');
-        timeRemainingTd.textContent = auction.timeRemaining;
+        timeRemainingTd.textContent = `${auction.timeRemaining} Days`;
 
         let actionTd = document.createElement('td');
         if (auction.isCurrentUserProductOwner) {
@@ -57,8 +73,12 @@ function updateTable(updatedAuctions){
             deleteLink.textContent = "Delete";
             deleteLink.classList.add("btn", "btn-danger");
             actionTd.appendChild(deleteLink);
+        } else {
+            let emptySpan = document.createElement('span');
+            actionTd.appendChild(emptySpan);
         }
 
+        tr.appendChild(imgTd);
         tr.appendChild(productTd);
         tr.appendChild(sellerTd);
         tr.appendChild(topBidTd);

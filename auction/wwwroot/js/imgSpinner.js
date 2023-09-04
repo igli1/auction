@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
             spinner.style.display = 'none';
         } else {
             spinner.style.display = 'block';
-            console.log(spinner);
             img.onload = function () {
                 spinner.style.display = 'none';
             };

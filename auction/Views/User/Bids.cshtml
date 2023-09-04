@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<auction.Models.ViewModels.UserBidsViewModel>
+
 @{
     ViewData["Title"] = "User Profile Management";
 }
@@ -10,7 +12,29 @@
         </div>
         <div class="col-md-8 border-left">
             <h2>Bids</h2>
-            
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Bid Amount</th>
+                    <th>Initial Amount</th>
+                    <th>Bid Status</th>
+                    <th>End Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var bid in Model)
+                {
+                    <tr>
+                        <td>@bid.ProductName</td>
+                        <td>@bid.BidAmount</td>
+                        <td>@bid.InitialAmount</td>
+                        <td>@bid.BidStatus</td>
+                        <td>@bid.EndDate.ToString("dd-MM-yyyy")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
