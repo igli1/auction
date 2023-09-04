@@ -1,14 +1,19 @@
 ﻿@{
     var actionName = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 }
-
-<h2><br/></h2>
+<div class="row">
+    <div class="col-md-12 offset-md-3 image-container-details mx-auto">
+        <img src="@Url.Action("GetImage", "ObjectStorage", new { isProfile = true })" alt="Product Image" width="300" height="300" onload="hideSpinner(this)"/>
+        <div class="spinner-border text-primary image-spinner loader" role="status"></div>
+    </div>
+</div>
 
 <label><b>Manage</b></label>
 <div class="list-group" name="UserNav">
+
     <a asp-controller="User" class="list-group-item list-group-item-action @(actionName == "Profile" ? "active" : "")" asp-action="Profile">
         Profile
-    </a>
+        </a>
     <a class="list-group-item list-group-item-action @(actionName == "Wallet" ? "active" : "")" asp-action="Wallet">
         Wallet
     </a>

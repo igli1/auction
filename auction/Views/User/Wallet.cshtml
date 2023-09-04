@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            @Html.Partial("_UserNav")
+            @await Html.PartialAsync("_UserNav")
         </div>
         <div class="col-md-8 border-left">
             <h2>Wallet</h2>
@@ -108,3 +108,10 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script src="/js/imgSpinner.js" asp-append-version="true"></script>
+}
+@section Styles
+{
+    <link rel="stylesheet" href="/css/imgSpinner.css" asp-append-version="true"/>
+}
