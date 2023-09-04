@@ -140,6 +140,8 @@ public class HomeController : Controller
         var wallet = await _context.Wallet.FirstOrDefaultAsync(w => w.UserId == userId);
         
         var bids = await _context.Bid
+            .Include(b => b.Transaction)
+            .Where(b => b.Transaction == null)
             .Where(b => b.BidderId == userId && _context.Bid
                 .Where(b2 => b2.ProductId == b.ProductId)
                 .Max(b2 => b2.Amount) == b.Amount)
@@ -281,28 +283,5 @@ public class HomeController : Controller
             .ToListAsync();
         
         return products;
-    }
-    [HttpGet]
-    public async Task<IActionResult> GetImage(string imageName)
-    {
-        try
-        {
-            var stream = await _minio.GetFileAsync(imageName);
-            var file = File(stream, "image/*");
-            if(file == null)
-                return ReturnDefaultImage();
-            return file;
-        }
-        catch (Exception ex)
-        {
-            return ReturnDefaultImage();
-        }
-    }
-    
-    private IActionResult ReturnDefaultImage()
-    {
-        var path = _env.WebRootPath ;
-        var imagePath = Path.Combine(path, "Image", "product.jpg");
-        return PhysicalFile(imagePath, "image/*");
     }
 }
