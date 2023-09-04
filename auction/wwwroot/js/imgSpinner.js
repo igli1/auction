@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
             spinner.style.display = 'none';
         } else {
             spinner.style.display = 'block';
+            console.log(spinner);
             img.onload = function () {
                 spinner.style.display = 'none';
             };
@@ -16,8 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function hideSpinner(imgElement) {
     
     const spinner = imgElement.nextElementSibling;
-    console.log(spinner);
-    if (spinner && spinner.classList.contains('image-spinner')) {
+    if (spinner && spinner.classList.contains('loader')) {
         console.log(true);
         spinner.style.display = 'none';
     }

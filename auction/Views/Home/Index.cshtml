@@ -26,9 +26,8 @@
                         {
                             <tr>
                                 <td class="image-container-home">
-                                    <img src="@Url.Action("GetImage", "Home", new { imageName = auction.ProductPhoto })" alt="Product Image" class="loading-image" width="150" height="150" onload="hideSpinner(this)"/>
-                                    <span class="spinner-grow spinner-grow-sm image-spinner image-spinner-home" role="status" aria-hidden="true"></span>
-                                    <i class="bi bi-link-45deg"></i>
+                                    <img src="@Url.Action("GetImage", "ObjectStorage", new { imageName = auction.ProductPhoto })" alt="Product Image" class="loading-image" width="150" height="150" onload="hideSpinner(this)"/>
+                                    <div class="loader"></div>
                                 </td>
                                 <td>
                                     <a asp-action="ProductDetails" asp-route-Id="@auction.ProductId">@auction.ProductName</a>
