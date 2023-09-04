@@ -6,7 +6,7 @@ td.image-container-home {
     overflow: hidden;
 }
 
-td.image-container-home .image-spinner {
+td.image-container-home .image-spinner td.image-container-details {
     position: absolute;
     top: 50%;
     left: 50%;

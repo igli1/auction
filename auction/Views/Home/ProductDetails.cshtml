@@ -89,9 +89,9 @@
     {
         <div class="row">
             <div class="col-md-12 offset-md-3 image-container-details">
-                <img src="@Url.Action("GetImage", "ObjectStorage", new { imageName = @Model.ImageName })" width="300" height="300" onload="hideSpinnerDetails(this)">
-                <span class="spinner-grow spinner-grow-sm image-spinner image-spinner-details" role="status" aria-hidden="true" id="create-link-spinner"></span>
-                <i class="bi bi-link-45deg"></i>
+                <img src="@Url.Action("GetImage", "ObjectStorage", new { imageName = Model.ImageName })" alt="Product Image" width="300" height="300" onload="hideSpinner(this)"/>
+                <div class="spinner-border text-primary image-spinner loader" role="status">
+                </div>
             </div>
         </div>
     }
