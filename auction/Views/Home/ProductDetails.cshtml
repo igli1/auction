@@ -87,9 +87,9 @@
     }
     @if (!String.IsNullOrEmpty(@Model.ImageName))
     {
-        <div class="row">
+        <div class="row rowDetails">
             <div class="col-md-12 offset-md-3 image-container-details">
-                <img src="@Url.Action("GetImage", "ObjectStorage", new { imageName = Model.ImageName })" alt="Product Image" width="300" height="300" onload="hideSpinner(this)"/>
+                <img class="loading-image" src="@Url.Action("GetImage", "ObjectStorage", new { imageName = Model.ImageName })" alt="Product Image" width="300" height="300" onload="hideSpinner(this)"/>
                 <div class="spinner-border text-primary image-spinner loader" role="status">
                 </div>
             </div>
