@@ -21,11 +21,11 @@
                     <tbody>
                     @if (Model?.Auctions != null)
                     {
-                        @foreach (var auction in Model.Auctions)
+                        @foreach (var auction in Model.Auctions )
                         {
                             <tr>
                                 <td class="image-container-home">
-                                    <img src="@Url.Action("GetImage", "ObjectStorage", new { imageName = auction.ProductPhoto })" alt="Product Image" width="150" height="150" onload="hideSpinner(this)"/>
+                                    <img class="loading-image" src="@Url.Action("GetImage", "ObjectStorage", new { imageName = auction.ProductPhoto })" alt="Product Image" width="150" height="150" onload="hideSpinner(this)"/>
                                     <div class="spinner-border text-primary image-spinner loader" role="status">
                                     </div>
                                 </td>
@@ -66,6 +66,4 @@
             <h4>Wallet Value: @Model?.WalletValue $</h4>
         </div>
     </div>
-@section Scripts{
-    <script src="~/lib/signalr/signalr.js"></script>
-}
+

@@ -23,38 +23,42 @@ function getAllAuctions(){
         });
 }
 function updateTable(updatedAuctions){
+    
     let tbody = document.querySelector('.table tbody');
 
     tbody.innerHTML = '';
 
     updatedAuctions.forEach(function(auction) {
         let tr = document.createElement('tr');
-
+        
         let imgTd = document.createElement('td');
         imgTd.className = "image-container-home";
         let image = document.createElement('img');
-        image.src = `/Home/GetImage?imageName=${auction.productPhoto}`;
+        image.src = `/ObjectStorage/GetImage?imageName=${auction.productPhoto}`;
         image.alt = "Product Image";
         image.className = "loading-image";
         image.width = "150";
         image.height = "150";
         image.onload = function() {
             hideSpinner(this);
+            
         };
         let spinnerDiv = document.createElement('div');
-        spinnerDiv.className = "spinner-border text-primary image-spinner";
+        spinnerDiv.className = "spinner-border text-primary image-spinner loader";
+        spinnerDiv.style.display = 'block';
         imgTd.appendChild(image);
         imgTd.appendChild(spinnerDiv);
-
+        
         let productTd = document.createElement('td');
         let productLink = document.createElement('a');
         productLink.href = `/Home/ProductDetails/${auction.productId}`;
         productLink.textContent = auction.productName;
         productTd.appendChild(productLink);
-
+        
         let sellerTd = document.createElement('td');
         sellerTd.textContent = auction.sellerName;
         if (auction.isCurrentUserProductOwner) {
+            
             let sellerSpan = document.createElement('span');
             sellerSpan.textContent = "(You)";
             sellerTd.appendChild(sellerSpan);
@@ -77,7 +81,7 @@ function updateTable(updatedAuctions){
             let emptySpan = document.createElement('span');
             actionTd.appendChild(emptySpan);
         }
-
+        
         tr.appendChild(imgTd);
         tr.appendChild(productTd);
         tr.appendChild(sellerTd);
@@ -86,5 +90,7 @@ function updateTable(updatedAuctions){
         tr.appendChild(actionTd);
 
         tbody.appendChild(tr);
+        processImageLoaders(tr);
+        
     });
 }
