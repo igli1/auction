@@ -35,14 +35,17 @@ public class ObjectStorageController : Controller
                 var user = _context.Users.FirstOrDefault(i => i.Id == userId);
                 imageName = user.ProfilePicture;
             }
+
+            if (imageName == String.Empty)
+            {
+                return ReturnDefaultImage(DefaultProduct);
+            }
             var stream = await _minio.GetFileAsync(imageName);
             var file = File(stream, "image/*");
             if (file == null)
             {
                 if(isProfile)
                     return ReturnDefaultImage(DefaultProfile);
-                
-                return ReturnDefaultImage(DefaultProduct);
             }
                 
             return file;

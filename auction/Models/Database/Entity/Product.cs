@@ -28,5 +28,5 @@ public class Product
     public ApplicationUser Seller { get; set; }
     public List<Bid> ProductBids { get; set; }
     public SoldItem SoldItem { get; set; }
-    public string Image { get; set; }
+    public string? Image { get; set; }
 }
