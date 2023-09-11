@@ -46,6 +46,7 @@ public class ObjectStorageController : Controller
             {
                 if(isProfile)
                     return ReturnDefaultImage(DefaultProfile);
+                return ReturnDefaultImage(DefaultProduct);
             }
                 
             return file;
