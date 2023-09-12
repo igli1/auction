@@ -22,7 +22,7 @@ Follow the instructions in the Installation section to get AuctionHub up and run
 
 <strong>bash Copy code:</strong>  <kbd>docker build -t auction .</kbd>
 Now RUN it as supposed
-docker run -d -p 8000:80 -e ASPNETCORE_ENVIRONMENT=Production --network nginx-proxy auction
+docker run -d -p 8000:80 -e ASPNETCORE_ENVIRONMENT=Development --network nginx-proxy auction
 This will build a Docker image named auction using the instructions in the Dockerfile.
 
 <strong>Or you can test it on:  [Auction](https://auction.bytes-exchange.com/ "Auction")</strong>
