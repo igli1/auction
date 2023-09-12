@@ -278,7 +278,7 @@ public class HomeController : Controller
                 TimeRemaining = (p.EndDate - DateTime.UtcNow).TotalDays.ToString("0"),
                 IsCurrentUserProductOwner = p.SellerId == userId,
                 TopBid = p.ProductBids.Max(b => (decimal?)b.Amount) ?? 0,
-                ProductPhoto = p.Image
+                ProductPhoto = p.Image ?? String.Empty
             })
             .ToListAsync();
         
