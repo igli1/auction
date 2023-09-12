@@ -99,8 +99,7 @@ public class HomeController : Controller
 
         string imageName = "";
         bool insertion = false;
-        if (model.Image != null)
-        {
+
             try
             {
                 imageName = Guid.NewGuid().ToString("N") + model.Image.FileName;
@@ -109,7 +108,6 @@ public class HomeController : Controller
             catch (Exception ex)
             {
                 return RedirectToAction("Error");
-            } 
         }
 
         var product = new Product

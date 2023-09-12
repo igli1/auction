@@ -27,40 +27,20 @@ public class ObjectStorageController : Controller
     [HttpGet]
     public async Task<IActionResult> GetImage(string imageName, bool isProfile = false)
     {
-        try
-        {
-            if (isProfile)
-            {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var user = _context.Users.FirstOrDefault(i => i.Id == userId);
-                imageName = user.ProfilePicture;
-            }
 
-            if (imageName == String.Empty)
-            {
-                return ReturnDefaultImage(DefaultProduct);
-            }
-            var stream = await _minio.GetFileAsync(imageName);
-            var file = File(stream, "image/*");
-            if (file == null)
-            {
-                if(isProfile)
-                    return ReturnDefaultImage(DefaultProfile);
-                return ReturnDefaultImage(DefaultProduct);
-            }
-                
-            return file;
-        }
-        catch (Exception ex)
+        if (isProfile)
         {
-            return ReturnDefaultImage(DefaultProduct);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId);
+            imageName = user.ProfilePicture;
         }
-    }
-    
-    private IActionResult ReturnDefaultImage(string imageName)
-    {
-        var path = _env.WebRootPath ;
-        var imagePath = Path.Combine(path, "Image", imageName);
-        return PhysicalFile(imagePath, "image/*");
+        else if(imageName == null)
+            imageName = String.Empty;
+        
+        var stream = await _minio.GetFileAsync(imageName, isProfile);
+        var file = File(stream, "image/*");
+                
+        return file;
+
     }
 }

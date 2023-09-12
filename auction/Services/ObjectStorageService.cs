@@ -11,8 +11,8 @@ public class ObjectStorageService
     private static MinioClient _minioClient;
     private readonly MinioConfiguration _minioConfiguration;
     private readonly ILogger<ObjectStorageService> _logger;
-    
-
+    private const string DefaultProduct = "product.jpg";
+    private const string DefaultProfile = "Profile.webp";
     public ObjectStorageService(IOptions<MinioConfiguration> options, ILogger<ObjectStorageService> logger)
     {
         _logger = logger;
@@ -26,14 +26,19 @@ public class ObjectStorageService
         
     }
 
-    public async Task<Stream> GetFileAsync(string objectKey)
+    public async Task<Stream> GetFileAsync(string objectKey, bool isProfile)
     {
         try
         {
             IServerSideEncryption sse = null;
             var contentType = "application/octet-stream";
             var stream = new MemoryStream();
-
+            
+            if(objectKey == String.Empty && isProfile)
+                objectKey = DefaultProfile;
+            else if (objectKey == String.Empty)
+                objectKey = DefaultProduct;
+            
             var getObjectArgs = new GetObjectArgs()
                 .WithBucket(_minioConfiguration.BucketName)
                 .WithObject(objectKey)

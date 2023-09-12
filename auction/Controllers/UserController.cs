@@ -310,23 +310,8 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> GetImage(string imageName)
     {
-        try
-        {
-            var stream = await _minio.GetFileAsync(imageName);
-            var file = File(stream, "image/*"); 
-            if(file == null)
-                return ReturnDefaultImage();
-            return file;
-        }
-        catch (Exception ex)
-        {
-            return ReturnDefaultImage();
-        }
-    }
-    private IActionResult ReturnDefaultImage()
-    {
-        var path = _env.WebRootPath ;
-        var imagePath = Path.Combine(path, "Image", "Profile.webp");
-        return PhysicalFile(imagePath, "image/webp");
+        var stream = await _minio.GetFileAsync(imageName, true);
+        var file = File(stream, "image/*");
+        return file;
     }
 }
